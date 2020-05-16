@@ -1,26 +1,54 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './styles/imports.scss';
+import fb from './config/fireBase.js';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import Login from './components/Login';
+import HomePage from './components/HomePage';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface IState {
+  userObj: object | null,
 }
+export default class App extends React.Component<{}, IState> {
+  constructor(props: any) {
+    super(props);
 
-export default App;
+    this.state = {
+      userObj: null,
+    }
+  }
+
+  componentDidMount() {
+    this.onAuth();
+  }
+
+  private onAuth():void {
+    fb.auth().onAuthStateChanged((userData: object | null) => {
+      if(userData) {
+        this.setState({userObj: userData});
+      }
+    });
+  }
+
+  public render() {
+    return(
+      <Router>
+        <Switch>
+          {!this.state.userObj ?
+            <>
+              <Route exact path="/" render={() => (<Redirect to="/login" />)} /> 
+              <Route exact path='/login'>
+                <Login />
+              </Route>
+            </> :
+            <>
+              <Route exact path="/" render={() => (<Redirect to="/home" />)} />
+              <Route exact path='/home'>
+                <HomePage />
+              </Route>
+            </>
+          }
+        </Switch>
+      </Router>
+    )
+  }
+}
