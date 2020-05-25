@@ -1,0 +1,141 @@
+@import './vars.scss';
+
+.overlay {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	background: black;
+}
+
+.top-bar {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border-bottom: 4px solid $border-grey;
+
+  .button-group {
+  	margin-right: 10px;
+    display: flex;
+  	align-items: center;
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+
+    button {
+      height: 40px;
+      width: 40px;
+      background-color: $grey;
+      border: none;
+      border-radius: 50%;
+      font-size: 30px;
+      text-align: center;
+      margin-left: 10px;
+			cursor: pointer;
+      outline: none;
+      transition: 0.2s ease-in;
+    }
+
+    button:hover {
+      transition: 0.2s ease-in;
+      background-color: darkgrey;
+    }
+
+    button:nth-child(3) {
+      color: transparent;
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      outline: none;
+      margin-right: 10px;
+
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+}
+
+.user-menu {
+  width: 300px;
+  height: 180px;
+  z-index: 10;
+  position: absolute;
+  top: 65px;
+  right: 20px;
+  background-color: white;
+  padding: 10px;
+  border: 2px solid $grey;
+  border-radius: 14px;
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+
+  .user-box {
+    display: flex;
+    width: 90%;
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    border-bottom: 2px solid $border-grey;
+
+    img {
+      width: 50px;
+      height: 50px;
+    }
+  
+    h2 {
+      margin-left: 10px;
+      font-size: 30px;
+      width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &_options {
+    margin-top: 55px;
+    
+    a {
+      all: unset;
+    }
+    
+    button {
+      background-color: transparent;
+      border: none;
+      height: 40px;
+      width: 100%;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      outline: none;
+      transition: 0.5s ease-in-out;
+    }
+  
+    button:hover {
+      transition: 0.5s ease-in-out;
+      background-color: $grey;
+    }
+  
+    span {
+      font-size: 20px;
+      margin-left: 35px;
+    }
+  
+    svg {
+      height: 35px;
+      width: 35px;
+      position: absolute;
+      left: 10px;
+      margin-top: 4px;
+    }
+  }
+}
