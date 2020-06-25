@@ -4,7 +4,9 @@
 	width: 100%;
 	height: 100%;
 	margin: 0;
-	background: black;
+  background: black;
+  opacity: 0.5;
+  z-index: 1;
 }
 
 .top-bar {
@@ -15,6 +17,10 @@
   align-items: center;
   background-color: white;
   border-bottom: 4px solid $border-grey;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1;
 
   .button-group {
   	margin-right: 10px;
@@ -65,7 +71,7 @@
   width: 300px;
   height: 180px;
   z-index: 10;
-  position: absolute;
+  position: fixed;
   top: 65px;
   right: 20px;
   background-color: white;

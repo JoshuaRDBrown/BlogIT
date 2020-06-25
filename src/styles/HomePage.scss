@@ -4,17 +4,63 @@
 	min-height: 100% !important;
 	margin: 0;
 	position: absolute;
+	top: 74px;
 	display: flex;
 	justify-content: center;
+
+	.new-post-form {
+		z-index: 1;
+		background-color: white;
+		display: flex;
+		align-items: flex-start;
+		flex-direction: column;
+		width: 50%;
+		height: fit-content;
+		position: absolute;
+		top: 20px;
+		border: 1px solid $border-grey;
+		border-radius: 10px;
+		padding: 10px;
+
+		span {
+			font-size: 35px;
+			margin-bottom: 20px;
+		}
+
+		input {
+			width: 50%;
+			height: 40px;
+			font-size: 30px;
+			padding-left: 10px;
+			margin-bottom: 20px;
+		}
+
+		textarea {
+			resize: none;
+		}
+
+		button {
+			margin-top: 20px;
+			width: 100px;
+			height: 40px;
+			border: none;
+			background-color: $submit-button-green;
+			color: white;
+			font-size: 20px;
+			outline: none;
+			cursor: pointer;
+		}
+	}
 
 	.content-container {
 		background-color: $grey;
 		position: absolute;
 		top: 0px;
 		width: 100%;
-		height: 93%;
+		height: 150%;
 		display: flex;
-		justify-content: center;
+		align-items: center;
+		flex-direction: column;
 
 		.content-item {
 			margin-top: 30px;
@@ -50,10 +96,48 @@
 					cursor: pointer;
 				}
 			}
-
-
 		}
 
+		.post {
+			display: flex;
+			flex-direction: column;
+			justify-content: left;
+			align-items: flex-start;
 
+			.user-information-section {
+				width: 100%;
+				height: 80px;
+				display: flex;
+				justify-content: flex-start;
+				align-items: center;
+				border-bottom: 1px solid $grey;
+				margin-bottom: 15px;
+
+				img {
+					width: 50px;
+					height: 50px;
+					padding-left: 10px;
+				}
+
+				span:nth-child(3) {
+					font-size: 15px;
+				}
+
+				span {
+					font-size: 25px;
+					margin-left: -10px;
+				}
+			}
+
+			span {
+				padding-left: 10px;
+			}
+
+			#title {
+				font-size: 30px;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+		}
 	}
 }

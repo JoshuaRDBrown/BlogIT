@@ -1,0 +1,41 @@
+.profileBanner {
+  width: 100%;
+  height: 450px;
+  display: flex;
+  margin-top: 74px;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 2px solid $border-grey;
+  border-radius: 14px;
+
+  img {
+    border-radius: 50%;
+    width: 250px;
+    height: 250px;
+    border: 4px solid $border-grey;
+    margin-top: 20px;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  p {
+    font-size: 30px;
+    font-weight: 300;
+    color: black;
+    margin-top: -5px;
+  }
+}
+
+.achievements-list {
+  position: absolute;
+  left: 30px;
+  top: 70px;
+}
+
+.more-information {
+  position: absolute;
+  right: 30px;
+  top: 70px;
+}

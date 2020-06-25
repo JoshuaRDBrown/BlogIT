@@ -91,12 +91,13 @@
       }
 
       button {
-        width: 10%;
+        width: 120px;
         height: 40px;
         border: none;
         font-size: 20px;
         background-color: $submit-button-green;
         color: white;
+        padding: 5px;
       }
     }
   }
