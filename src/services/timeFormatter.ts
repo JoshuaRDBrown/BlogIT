@@ -14,21 +14,21 @@ function timeFormatter(unixTimeStamp: number): string {
       if(days === 0) {
         if(hours === 0) {
           if(minutes === 0) {
-            return `Posted ${seconds} seconds ago` ;
+            return `${seconds} seconds ago` ;
           } else {
-            return `Posted ${minutes} minutes ago`;
+            return `${minutes} minutes ago`;
           }
         } else {
-          return `Posted ${hours} hours ago`;
+          return `${hours} hours ago`;
         }
       } else {
-        return `Posted ${days} days ago`;
+        return `${days} days ago`;
       }
     } else {
-      return `Posted ${months} months ago`;
+      return `${months} months ago`;
     }
   } else {
-    return `Posted ${years} years ago`;
+    return `${years} years ago`;
   }
 }
 

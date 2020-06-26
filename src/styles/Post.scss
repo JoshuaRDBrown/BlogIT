@@ -72,14 +72,24 @@
       padding-top: 20px;
       width: 100%;
       display: flex;
-      align-items: center;
       justify-content: space-between;
 
-      a {
-        position: absolute;
-        left: 280px;
+      .user-info {
+        display: flex;
+        align-items: center;
+
+        a {
+          margin-left: 10px;
+          font-size: 20px;
+        }
       }
 
+      .time-created {
+        span {
+          color: $text-grey;
+        }
+      }
+     
       span:nth-child(3) {
         color: $text-grey;
       }
