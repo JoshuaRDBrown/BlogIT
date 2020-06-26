@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FirstLoginForm from './FirstLoginForm';
 import fb from '../config/fireBase';
 import timeFormatter from '../services/timeFormatter';
-import { Link } from 'react-router-dom';
+
 interface IProps {
   isFirstLogin: boolean,
   updateInitialInformation: ((username: string, profilePictureURL: string) => void),
@@ -15,7 +15,7 @@ const HomePage: React.SFC<IProps> = (props) => {
 
   const [title, setPostTitle] = useState('');
   const [body, setPostBody] = useState('');
-  
+
   return(
     <div className='homepage-container'>
       {props.isFirstLogin &&
@@ -26,11 +26,11 @@ const HomePage: React.SFC<IProps> = (props) => {
           <div className='overlay'></div>
           <div className='new-post-form'>
             <span>Create new post</span>
-            <input 
+            <input
               placeholder='Post title'
               onChange={e => setPostTitle(e.target.value)}
             />
-            <textarea 
+            <textarea
               placeholder='Speak your mind...'
               onChange={e => setPostBody(e.target.value)}
             />

@@ -37,8 +37,6 @@ export default class App extends React.Component<{}, IState> {
 
 	componentDidMount() {
 		this.onAuth();
-		this.fetchPosts();
-
 		// let menu:any = document.getElementsByClassName('user-menu');
 		// if(menu) {
 		// 	window.addEventListener('mouseup', (event: any)=> {
@@ -56,7 +54,8 @@ export default class App extends React.Component<{}, IState> {
 	private onAuth():void {
 		fb.auth().onAuthStateChanged((user) => {
 			if(user) {
-				this.setState({userObj: user});
+				this.setState({userObj: user });
+				this.fetchPosts();
 			}
 		});
 	}
@@ -93,7 +92,7 @@ export default class App extends React.Component<{}, IState> {
 	}
 
 	private updateInitialInformation(username: string, profilePictureURL: string):void {
-		//TODO check if the username already exists 
+		//TODO check if the username already exists
 		fb.auth().currentUser?.updateProfile({
 			displayName: username,
 			photoURL: profilePictureURL || this.state.defaultProfilePicture,
@@ -129,7 +128,7 @@ export default class App extends React.Component<{}, IState> {
 
 			fb.firestore().collection('/posts').doc(randomId).set({
 				content
-			}); 
+			});
 			this.state.posts.splice(0, 0, { content });
 			this.setState({ creatingNewPost: false });
 		} else {
@@ -144,7 +143,7 @@ export default class App extends React.Component<{}, IState> {
 				<Route exact path="/" render={() => (<Redirect to={this.state.userObj? "/home" : '/login'} />)} />
 					{!this.state.userObj ?
 						<>
-							<Route exact path="/home" render={() => (<Redirect to="/login" />)} /> 
+							<Route exact path="/home" render={() => (<Redirect to="/login" />)} />
 							<Route exact path='/login'>
 								<Login authUser={this.authUser.bind(this)} />
 							</Route>
@@ -163,7 +162,7 @@ export default class App extends React.Component<{}, IState> {
 									<button onClick={()=> this.setState({ viewingAccountMenu: !this.state.viewingAccountMenu })} title={fb.auth().currentUser?.displayName!}>
 										<img alt='profile' src={fb.auth().currentUser?.photoURL!}/>
 									</button>
-								</div>                
+								</div>
 							</div>
 							{this.state.viewingAccountMenu &&
 								<div className='user-menu'>
@@ -189,7 +188,7 @@ export default class App extends React.Component<{}, IState> {
 											<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 30" x="0px" y="0px"><title>Arrow, entrance, exit, signout, log, out, logout </title><g><path d="M22.707,12.707l-4,4-1.414-1.414L19.5859,13H7v2h8v6a1.0029,1.0029,0,0,1-1,1H2a1.0029,1.0029,0,0,1-1-1V3A1.0029,1.0029,0,0,1,2,2H14a1.0029,1.0029,0,0,1,1,1v8h4.5859L17.293,8.707l1.414-1.414,4,4A.9994.9994,0,0,1,22.707,12.707Z"/></g></svg>
 										</button>
 									</div>
-								</div>  
+								</div>
 							}
 							<Route exact path='/home'>
 								<HomePage

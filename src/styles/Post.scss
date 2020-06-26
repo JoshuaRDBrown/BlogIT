@@ -1,0 +1,104 @@
+@import './vars.scss';
+
+.post-container {
+  position: absolute;
+  top: 74px;
+  width: 100%;
+  height: 100%;
+  background-color: $grey;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .post-box {
+    margin-top: 30px;
+    background-color: white;
+    width: 70%;
+    height: fit-content;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+
+    .comment-section {
+      display: flex;
+      align-items: center;
+
+      textarea {
+        width: 80%;
+        height: 50px;
+        margin-left: 20px;
+        resize: none;
+      }
+
+      button {
+        width: 120px;
+        height: 50px;
+        margin-left: 20px;
+        border: none;
+        background-color: $submit-button-green;
+        font-size: 20px;
+        color: white;
+      }
+
+    }
+
+    input {
+      width: 80%;
+    }
+
+    img {
+      width: 50px;
+      height: 50px;
+    }
+
+    #title {
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    hr {
+      width: 30%;
+    }
+
+    #body {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .postFooter {
+      border-top: 1px solid $grey;
+      padding-top: 20px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      a {
+        position: absolute;
+        left: 280px;
+      }
+
+      span:nth-child(3) {
+        color: $text-grey;
+      }
+
+      img {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    .postStats {
+      width: 100%;
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-start;
+
+      span:not(:nth-child(1)) {
+        margin-left: 20px;
+      }
+    }
+  }
+}
