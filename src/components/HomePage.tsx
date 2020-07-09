@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 interface IProps {
   isFirstLogin: boolean,
   updateInitialInformation: ((username: string, profilePictureURL: string) => void),
-  posts: Array<{ content: { id: number, title: string, body: string, author: string, photoURL: string, time: number, likes: number, dislikes: number, comments: number } }>,
+  posts: Array<{ content: { id: number, title: string, body: string, author: string, photoURL: string, time: number, likes: number, dislikes: number, comments: Array<any> } }>,
   creatingNewPost: boolean,
   createNewPost: ((title: string, body: string) => void),
 }
@@ -55,8 +55,8 @@ const HomePage: React.SFC<IProps> = (props) => {
         {props.posts && props.posts.length !== 0 ?
         props.posts.map((post) => {
           return(
-            <Link to={`/posts/${post.content.id}`}>
-              <div key={post.content.id} className='content-item post'>
+            <Link key={post.content.id} to={`/posts/${post.content.id}`}>
+              <div className='content-item post'>
                 <div className='information-section'>
                   <img alt='profile' src={post.content.photoURL}/>
                   <span>{post.content.author}</span>
@@ -64,8 +64,8 @@ const HomePage: React.SFC<IProps> = (props) => {
                     <span>{timeFormatter(post.content.time)}</span>
                     <span><b>Likes:</b> {post.content.likes}</span>
                     <span><b>Dislikes:</b> {post.content.dislikes}</span>
-                    <span><b>Comments:</b> {post.content.comments}</span>
-                </div>
+                    <span><b>Comments:</b> {post.content.comments.length}</span>
+                  </div>
                 </div>
                 <span id='title'>{post.content.title}</span>
                 <div className='content'>

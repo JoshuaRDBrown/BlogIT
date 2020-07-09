@@ -18,6 +18,7 @@ interface IState {
 	posts: any,
 	currentUserPosts: any,
 	creatingNewPost: boolean,
+	isOnline: boolean,
 }
 
 export default class App extends React.Component<{}, IState> {
@@ -32,11 +33,14 @@ export default class App extends React.Component<{}, IState> {
 			posts: [],
 			currentUserPosts: [],
 			creatingNewPost: false,
+			isOnline: false,
 		}
 	}
 
 	componentDidMount() {
 		this.onAuth();
+		this.setState({ isOnline: true });
+	
 		// let menu:any = document.getElementsByClassName('user-menu');
 		// if(menu) {
 		// 	window.addEventListener('mouseup', (event: any)=> {
@@ -48,7 +52,7 @@ export default class App extends React.Component<{}, IState> {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('mouseup', this.componentDidMount);
+		//window.removeEventListener('mouseup', this.componentDidMount);
 	}
 
 	private onAuth():void {
@@ -123,8 +127,9 @@ export default class App extends React.Component<{}, IState> {
 				photoURL: this.state.userObj.photoURL,
 				likes: 0,
 				dislikes: 0,
-				comments: 0,
+				comments: [],
 			}
+			Object.freeze(content);
 
 			fb.firestore().collection('/posts').doc(randomId).set({
 				content
@@ -151,7 +156,9 @@ export default class App extends React.Component<{}, IState> {
 						<>
 							<Route exact path="/login" render={() => (<Redirect to="/home" />)} />
 							<div className='top-bar'>
-								<h1>BlogIT</h1>
+								<Link to='/home'>
+									<h1>BlogIT</h1>
+								</Link>
 								<div className='button-group'>
 									<button onClick={()=> this.setState({ creatingNewPost: true })} title='Create new post'>+</button>
 									<Link to='/home'>
