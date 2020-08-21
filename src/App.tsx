@@ -24,7 +24,6 @@ interface IState {
 export default class App extends React.Component<{}, IState> {
 	constructor(props: any) {
 		super(props);
-
 		this.state = {
 			userObj: null,
 			isFirstLogin: false,
