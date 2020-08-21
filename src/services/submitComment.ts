@@ -24,7 +24,6 @@ const submitComment = (existingComments: any[], commentContent: string, postId: 
   const ref = db.doc(`posts/${postId}`)
   ref.get().then((doc: any) => {
     if(doc.exists) {
-      console.log(doc.data())
       return ref.update({
         comments: newCommentsArray
       });

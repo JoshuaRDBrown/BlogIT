@@ -10,7 +10,8 @@ interface IProps {
   posts: Posts[],
   creatingNewPost: boolean,
   createNewPost: ((title: string, body: string) => void),
-  genericProfilePicture: string
+  genericProfilePicture: string,
+  darkMode: boolean,
 }
 
 const HomePage: React.SFC<IProps> = (props) => {
@@ -42,7 +43,7 @@ const HomePage: React.SFC<IProps> = (props) => {
           </div>
         </>
       }
-      <div className='content-container'>
+      <div className='content-container' style={{backgroundColor: props.darkMode ? '$darkmode-grey' : '$grey'}}>
         <div className='content-item'>
           <span>Filter:</span>
           <select>
@@ -58,7 +59,7 @@ const HomePage: React.SFC<IProps> = (props) => {
         props.posts.map((post) => {
           return(
             <Link key={post.content.id} to={`/posts/${post.content.id}`}>
-              <div className='content-item post'>
+              <div className='content-item post' style={{backgroundColor: props.darkMode ? '$darkmode-bg' : 'white'}}>
                 <div className='information-section'>
                   <Link to={`/user/${post.content.userId}`}>
                     <img alt='profile' src={post.content.photoURL}/>
@@ -66,8 +67,8 @@ const HomePage: React.SFC<IProps> = (props) => {
                   </Link>
                   <div className='stats'>
                     <span>{timeFormatter(post.content.time)}</span>
-                    <span><b>Likes:</b> {post.likes}</span>
-                    <span><b>Dislikes:</b> {post.dislikes}</span>
+                    <span><b>Likes:</b> {post.likes || 0}</span>
+                    <span><b>Dislikes:</b> {post.dislikes || 0}</span>
                     <span><b>Comments:</b> {post.comments ? `${post.comments.length}` : '0'}</span>
                   </div>
                 </div>
