@@ -3,7 +3,11 @@ import { RouteComponentProps } from 'react-router';
 import fb from '../config/fireBase';
 import timeFormatter from '../services/timeFormatter';
 import submitComment from '../services/submitComment';
+import addReaction from '../services/addReaction';
 import Comment from '../models/Comment';
+import { Link } from 'react-router-dom';
+import { Posts } from '../models/Posts';
+import PostCommentSection from './PostCommentSection';
 
 interface PostParams {
   id: string,
@@ -11,10 +15,25 @@ interface PostParams {
 
 function Post(props: RouteComponentProps<PostParams>) {
 
-  const [postData, setPostData] = useState({ title: '', body: '', author: '', time: 0, photoURL: '', likes: 0, dislikes: 0});
-  const [existingComments, setExistingComments] = useState<any>([])
-  const [commentContent, setCommentContent] = useState('');
-  const isMounted = useRef(false);
+  const [postData, setPostData] = useState<Posts>({
+    likes: 0,
+    dislikes: 0,
+    comments: [],
+    content: { 
+      id: 0, 
+      userId: '', 
+      title: '', 
+      body: '', 
+      author: '', 
+      photoURL: '', 
+      time: 0, 
+  }
+  });
+  const [existingComments, setExistingComments] = useState<Comment[]>([])
+  const [commentContent, setCommentContent] = useState<string>('');
+  const[likes, setLikes] = useState(0);
+  const[dislikes, setDislikes] = useState(0);
+  const isMounted = useRef<boolean>(false);
 
   useEffect(():any => {
     isMounted.current = true;
@@ -22,12 +41,14 @@ function Post(props: RouteComponentProps<PostParams>) {
     const ref = db.doc(`posts/${props.match.params.id}`)
     ref.get().then((doc: any) => {
       if(doc.exists && isMounted.current) {
-        setPostData(doc.data().content);
+        setPostData(doc.data());
         setExistingComments(doc.data().comments ? doc.data().comments : [])
+        setLikes(postData.likes);
+        setDislikes(postData.dislikes);
       }
     });
     return ()=> isMounted.current = false; //make sure memory doesn't leak by only fetching data if component is mounted
-  }, [setPostData, setExistingComments, props.match.params.id]);
+  }, [setPostData, setExistingComments, props.match.params.id, setLikes, setDislikes]);
 
   const onPostClick = () => {
     const updateComments = submitComment(existingComments, commentContent, props.match.params.id);
@@ -37,21 +58,24 @@ function Post(props: RouteComponentProps<PostParams>) {
   return (
     <div className='post-container'>
       <div className='post-box'>
-        <span id='title'>{postData.title}</span>
-        <span id='body'>{postData.body}</span>
+        <span id='title'>{postData.content.title}</span>
+        <span id='body'>{postData.content.body}</span>
         <div className='postFooter'>
           <div className='user-info'>
-            <img alt='profile' src={postData.photoURL} />
-            <a href='#'>{postData.author}</a>
+            <img alt='profile' src={postData.content.photoURL} />
+            <Link to={`/user/${postData.content.userId}`}>{postData.content.author}</Link>
           </div>
           <div className='time-created'>
-            <span>{timeFormatter(postData.time)}</span>
+            <span>{timeFormatter(postData.content.time)}</span>
           </div>
         </div>
         <div className='postStats'>
-          <span>Likes: {postData.likes}</span>
-          <span>Dislikes: {postData.dislikes}</span>
-          <span>Comments: {existingComments.length}</span>
+          <img onClick={()=> addReaction('likes', postData.content.id)} src={process.env.PUBLIC_URL + '/assets/like.svg'} />
+          <span>{likes}</span>
+          <img src={process.env.PUBLIC_URL + '/assets/like.svg'} />
+          <span>{dislikes}</span>
+          <img src={process.env.PUBLIC_URL + '/assets/comments.svg'} />
+          <span>{existingComments.length || '0'}</span>
         </div>
       </div>
       <div className='post-box'>
@@ -63,16 +87,8 @@ function Post(props: RouteComponentProps<PostParams>) {
       </div>
       {existingComments.length !== 0 &&
         existingComments.map((comment: Comment, i:number) => {
-          console.log(comment)
           return(
-            <div key={i} className='post-box'>
-              <img alt='profile' src={comment.photoURL}/>
-              <div className='comment'>
-                <span>{comment.author}</span>
-                <span>{comment.content}</span>
-                <span>{timeFormatter(comment.timeCreated)}</span>
-              </div>
-            </div>
+            <PostCommentSection comment={comment} index={i} />
           )
         })
       }

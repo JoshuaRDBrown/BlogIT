@@ -1,5 +1,3 @@
-@import './vars.scss';
-
 .post-container {
   position: absolute;
   top: 74px;
@@ -9,6 +7,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  word-wrap: break-word;
 
   .post-box {
     margin-top: 30px;
@@ -22,18 +21,28 @@
 
     .comment {
       display: flex;
-      flex-direction: inherit;
+      flex-direction: row;
       justify-content: flex-start;
-      position: relative;
-      left: 70px;
-      top: -55px;
+      align-items: center;
+      height: fit-content;
 
-      span:nth-child(1) {
-        font-size: 20px;
+      .commentAuthor {
+        display: flex;
+        align-items: flex-start;
+        min-width: 50%;
+
+        #post-author-badge {
+          font-size: 15px;
+          background-color: $submit-button-green;
+          color: white;
+          padding: 5px;
+        }
+        
+        span {
+          margin-left: 10px;
+          font-size: 20px;
+        }
       }
-
-
-
     }
 
     .comment-section {
@@ -121,9 +130,22 @@
       margin-top: 20px;
       display: flex;
       justify-content: flex-start;
+      align-items: center;
 
-      span:not(:nth-child(1)) {
-        margin-left: 20px;
+      span {
+        font-size: 30px;
+        margin: 0 20px 10px 10px;
+      }
+
+      img {
+        width: 40px;
+        height: 40px;
+      }
+
+      img:nth-child(3) {
+        -ms-transform: rotate(180deg); /* IE 9 */
+        transform: rotate(180deg);
+        margin-top: -10px;
       }
     }
   }

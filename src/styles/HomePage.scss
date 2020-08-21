@@ -75,8 +75,14 @@
 			.information-section {
 				width: 100%;
 
+				a {
+					display: flex; 
+					justify-content: flex-start;
+				}
+
 				span:nth-child(2) {
 					margin-left: 10px;
+					margin-top: 5px;
 				}
 			}
 
@@ -99,6 +105,9 @@
 
 			#title {
 				margin-left: 10px;
+				max-width: 90%;
+				text-overflow: ellipsis;
+				overflow: hidden;
 			}
 
 			.content {
@@ -126,7 +135,7 @@
 				flex-direction: column;
 				justify-content: left;
 				align-items: flex-start;
-				width: 100%;
+				min-width: 100%;
 	
 				.information-section {
 					width: 100%;

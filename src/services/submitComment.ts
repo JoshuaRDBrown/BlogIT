@@ -7,6 +7,7 @@ const submitComment = (existingComments: any[], commentContent: string, postId: 
 
   const commentObject: Comment = Object.freeze({
     commentId: createRandomId(),
+    userId: fb.auth().currentUser?.uid!,
     content: commentContent,
     author: fb.auth().currentUser?.displayName!,
     timeCreated: Date.now(),

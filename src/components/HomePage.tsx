@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import FirstLoginForm from './FirstLoginForm';
 import timeFormatter from '../services/timeFormatter';
 import { Link } from 'react-router-dom';
+import { Posts } from '../models/Posts';
 
 interface IProps {
   isFirstLogin: boolean,
-  updateInitialInformation: ((username: string, profilePictureURL: string) => void),
-  posts: Array<{ content: { id: number, title: string, body: string, author: string, photoURL: string, time: number, likes: number, dislikes: number, comments: Array<any> } }>,
+  updateInitialInformation: ((username: string, profilePictureURL: string, userProfileBio: string) => void),
+  posts: Posts[],
   creatingNewPost: boolean,
   createNewPost: ((title: string, body: string) => void),
+  genericProfilePicture: string
 }
 
 const HomePage: React.SFC<IProps> = (props) => {
@@ -21,7 +23,7 @@ const HomePage: React.SFC<IProps> = (props) => {
   return(
     <div className='homepage-container'>
       {props.isFirstLogin &&
-        <FirstLoginForm updateInitialInformation={props.updateInitialInformation} />
+        <FirstLoginForm updateInitialInformation={props.updateInitialInformation} genericProfilePicture={props.genericProfilePicture} />
       }
       {props.creatingNewPost &&
         <>
@@ -58,13 +60,15 @@ const HomePage: React.SFC<IProps> = (props) => {
             <Link key={post.content.id} to={`/posts/${post.content.id}`}>
               <div className='content-item post'>
                 <div className='information-section'>
-                  <img alt='profile' src={post.content.photoURL}/>
-                  <span>{post.content.author}</span>
+                  <Link to={`/user/${post.content.userId}`}>
+                    <img alt='profile' src={post.content.photoURL}/>
+                    <span>{post.content.author}</span>
+                  </Link>
                   <div className='stats'>
                     <span>{timeFormatter(post.content.time)}</span>
-                    <span><b>Likes:</b> {post.content.likes}</span>
-                    <span><b>Dislikes:</b> {post.content.dislikes}</span>
-                    <span><b>Comments:</b> {post.content.comments.length}</span>
+                    <span><b>Likes:</b> {post.likes}</span>
+                    <span><b>Dislikes:</b> {post.dislikes}</span>
+                    <span><b>Comments:</b> {post.comments ? `${post.comments.length}` : '0'}</span>
                   </div>
                 </div>
                 <span id='title'>{post.content.title}</span>

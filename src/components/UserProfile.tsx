@@ -1,22 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { RouteComponentProps } from 'react-router';
 import dateFormatter from '../services/dateFormatter';
+import fb from '../config/fireBase';
 
 interface IProps {
-  user: any
+  id: string
 }
 
-const UserProfile: React.SFC<IProps> = (props) => {
+interface UserProfile {
+  displayName: string,
+  description: string,
+  dateCreated: string,
+  isOnline: boolean,
+  photoURL: string,
+}
 
-  let dates = dateFormatter(props.user.metadata.creationTime, props.user.metadata.lastSignInTime);
-  const [creationDate, lastSignIn] = dates;
+function UserProfile(props: RouteComponentProps<IProps>) {
 
-  document.title = `${props.user.displayName}'s profile`;
+  //let dates = dateFormatter(props.user.metadata.creationTime, props.user.metadata.lastSignInTime);
+  //const [creationDate, lastSignIn] = dates;
+  const [profileData, setProfileData] = useState<UserProfile>({ displayName: '', description: '', dateCreated: '', isOnline: false, photoURL: '', });
+
+  const db = fb.firestore();
+  const ref = db.doc(`profiles/${props.match.params.id}`)
+  ref.get().then((doc: any) => {
+    if(doc.exists) {
+      setProfileData(doc.data());
+    }
+  });
+
+  document.title = `${profileData?.displayName}'s profile`;
   return(
     <>
       <div className='profileBanner'>
-        <img alt='profile' src={props.user.photoURL}/>
-        <h1>{props.user.displayName}</h1>
-        <p>{props.user.profileDesc || 'Hello World!'}</p>
+        <img alt='profile' src={profileData.photoURL}/>
+        <h1>{profileData.displayName}</h1>
+        <p>{profileData.description || 'Hello World!'}</p>
       </div>
       <div className='achievements-list'>
         <h1>Achievements:</h1>
@@ -24,8 +43,8 @@ const UserProfile: React.SFC<IProps> = (props) => {
       </div>
       <div className='more-information'>
         <h1>About</h1>
-        <p>Date joined: {creationDate}</p>
-        <p>Status: {false ? 'Online' : `Offline: ${lastSignIn}`}</p>
+        <p>Date joined: {profileData.dateCreated}</p>
+        <p>Status: {profileData.isOnline ? 'Online' : 'Offline'}</p>
       </div>
     </>
   )
