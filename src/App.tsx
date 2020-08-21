@@ -9,7 +9,6 @@ import UserProfile from './components/UserProfile';
 import Post from './components/Post';
 import createRandomId from './services/createRandomId';
 import PageNotFound from './components/PageNotFound';
-import Settings from './components/Settings';
 
 interface IState {
 	userObj?: any
@@ -20,7 +19,6 @@ interface IState {
 	currentUserPosts: any,
 	creatingNewPost: boolean,
 	isOnline: boolean,
-	darkMode: boolean,
 }
 
 export default class App extends React.Component<{}, IState> {
@@ -36,14 +34,13 @@ export default class App extends React.Component<{}, IState> {
 			currentUserPosts: [],
 			creatingNewPost: false,
 			isOnline: false,
-			darkMode: false,
 		}
 	}
 
 	componentDidMount() {
 		this.onAuth();
 		this.setState({ isOnline: true });
-
+	
 		// let menu:any = document.getElementsByClassName('user-menu');
 		// if(menu) {
 		// 	window.addEventListener('mouseup', (event: any)=> {
@@ -123,10 +120,6 @@ export default class App extends React.Component<{}, IState> {
 		})
 
 		window.location.reload();
-	}
-
-	private toggleDarkMode(theme: boolean):void {
-		this.setState({ darkMode: theme });
 	}
 
 	private createNewPost(title: string, body: string): void {
@@ -218,14 +211,6 @@ export default class App extends React.Component<{}, IState> {
 									posts={this.state.posts}
 									createNewPost={this.createNewPost.bind(this)}
 									genericProfilePicture={this.state.defaultProfilePicture}
-									darkMode={this.state.darkMode}
-								/>
-							</Route>
-							<Route path='/settings'>
-								<Settings
-									toggleDarkMode={this.toggleDarkMode.bind(this)}
-									darkMode={this.state.darkMode}
-									userObj={this.state.userObj}
 								/>
 							</Route>
 							<Route path='/user/:id' component={UserProfile} />
