@@ -37,5 +37,4 @@ const FirstLoginForm: React.SFC<IProps> = (props) => {
 		</>
 	)
 }
-
 export default FirstLoginForm;
