@@ -22,8 +22,10 @@ const PostCommentSection: React.SFC<Props> = (props) => {
             <span id='post-author-badge'>Post author</span>
           }
         </div>
-        <span>{props.comment.content}</span>
-        <span>{timeFormatter(props.comment.timeCreated)}</span>
+        <div className="comment--content">
+          <span>{props.comment.content}</span>
+        </div>
+        <span id="commentTime">{timeFormatter(props.comment.timeCreated)}</span>
       </div>
     </div>
   )

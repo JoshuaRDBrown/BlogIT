@@ -29,6 +29,7 @@ function Post(props: RouteComponentProps<PostParams>) {
       time: 0, 
   }
   });
+
   const [existingComments, setExistingComments] = useState<Comment[]>([])
   const [commentContent, setCommentContent] = useState<string>('');
   const[likes, setLikes] = useState(0);
@@ -54,6 +55,8 @@ function Post(props: RouteComponentProps<PostParams>) {
     const updateComments = submitComment(existingComments, commentContent, props.match.params.id);
     setExistingComments(updateComments);
   }
+
+  document.title = `Post: ${postData.content.title}`;
 
   return (
     <div className='post-container'>
@@ -95,6 +98,5 @@ function Post(props: RouteComponentProps<PostParams>) {
     </div>
   )
 }
-
 
 export default Post;

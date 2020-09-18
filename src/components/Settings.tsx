@@ -4,8 +4,6 @@ import AccountPrivacy from './settingsComponents/AccountPrivacy';
 import AccountSettings from './settingsComponents/AccountSettings';
 
 interface Props {
-  toggleDarkMode: ((theme: boolean) => void),
-  darkMode: boolean,
   userObj: any,
 }
 
@@ -27,36 +25,38 @@ const Settings: React.SFC<Props> = (props) => {
 
   return(
     <div className='settings-container'>
-      <div className='settings-box'>
       <span id='title'>Settings</span><br/>
       <span id='secondary-text'>Preferences and settings</span>
-      {settings_menu.map((setting)=> {
-        const isActiveTab = currentSettingView === setting.name;
-        return(
-          <div
-            onClick={()=> setCurrentSettingView(setting.name)}
-            className='settings-box_item'
-            style={{ borderBottom: isActiveTab ? '2px solid #d9271a' : '2px solid #dcdcdc' }}
-          >
-            <div className='setting-box--label'>
-              <span>{setting.label}</span><br/>
-              <span id='description'>{setting.description}</span>
-            </div>
-            <div className='setting-box--value'>
-              <button> > </button>
-            </div>
-          </div>
-        )
-      })}
-      </div>
-      <div className='right-container'>
-        {currentSettingView === 'ACCOUNT' ?
-          <AccountSettings userObj={props.userObj} /> :
-        currentSettingView === 'PREFERENCES' ?
-          <AccountPreferences /> :
-        currentSettingView === 'PRIVACY' ?
-          <AccountPrivacy /> : null
-        }
+      <div className='settings-box'>
+        <div className='settings-box_menu'>
+          {settings_menu.map((setting) => {
+            const isCurrentlyViewing = setting.name === currentSettingView;
+            return(
+              <div className='settings-box_menu--item'>
+                <img 
+                  src={process.env.PUBLIC_URL + `/assets/icon-${setting.name}.svg`}
+                />
+                <button 
+                  key={setting.name} 
+                  onClick={()=> setCurrentSettingView(setting.name)}
+                  style={{fontWeight: isCurrentlyViewing ? 'bold' : 'normal', color: isCurrentlyViewing ? 'black' : '#6b6b6b'}}
+                >
+                {setting.label}
+                </button>
+              </div>
+            )
+          })
+          }
+        </div>
+        <div className='settings-box_right-view'>
+          {currentSettingView === 'ACCOUNT' ?
+            <AccountSettings userObj={props.userObj} /> :
+          currentSettingView === 'PREFERENCES' ?
+            <AccountPreferences /> :
+          currentSettingView === 'PRIVACY' ?
+            <AccountPrivacy /> : null
+          }
+        </div>
       </div>
     </div>
   )

@@ -9,7 +9,7 @@ import UserProfile from './components/UserProfile';
 import Post from './components/Post';
 import createRandomId from './services/createRandomId';
 import PageNotFound from './components/PageNotFound';
-
+import Settings from './components/Settings';
 interface IState {
 	userObj?: any
 	isFirstLogin: boolean,
@@ -210,6 +210,12 @@ export default class App extends React.Component<{}, IState> {
 									posts={this.state.posts}
 									createNewPost={this.createNewPost.bind(this)}
 									genericProfilePicture={this.state.defaultProfilePicture}
+								/>
+							</Route>
+							<Route path='/settings'>
+								<Settings
+									userObj={this.state.userObj}
+								
 								/>
 							</Route>
 							<Route path='/user/:id' component={UserProfile} />

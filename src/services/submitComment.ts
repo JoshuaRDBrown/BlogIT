@@ -5,12 +5,14 @@ import Comment from '../models/Comment';
 const submitComment = (existingComments: any[], commentContent: string, postId: string) => {
   const db = fb.firestore();
 
+  console.log(Date.now())
+
   const commentObject: Comment = Object.freeze({
     commentId: createRandomId(),
     userId: fb.auth().currentUser?.uid!,
     content: commentContent,
     author: fb.auth().currentUser?.displayName!,
-    timeCreated: Date.now(),
+    timeCreated: Date.now() / 1000,
     photoURL: fb.auth().currentUser?.photoURL!,
     interactions: {
       likes: 0,

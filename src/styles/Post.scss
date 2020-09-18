@@ -2,12 +2,17 @@
   position: absolute;
   top: 74px;
   width: 100%;
-  height: 100%;
-  background-color: $grey;
+  height: fit-content;
+  min-height: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
   word-wrap: break-word;
+  background-color: $grey;
+
+  .post-box:last-child {
+    margin-bottom: 40px;
+  }
 
   .post-box {
     margin-top: 30px;
@@ -20,11 +25,14 @@
     flex-direction: column;
 
     .comment {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
-      height: fit-content;
+      &--content {
+        margin-top: 20px;
+        margin-bottom: 10px;  
+      }
+
+      #commentTime {
+        color: $text-grey;
+      }
 
       .commentAuthor {
         display: flex;
@@ -51,21 +59,24 @@
 
       textarea {
         width: 80%;
-        height: 50px;
+        height: 40px;
         margin-left: 20px;
         resize: none;
+        border: 2px solid $border-grey;
+        border-radius: 5px;
+        padding: 5px;
       }
 
       button {
         width: 120px;
-        height: 50px;
-        margin-left: 20px;
+        height: 40px;
+        margin-left: 45px;
         border: none;
         background-color: $submit-button-green;
         font-size: 20px;
         color: white;
+        cursor: pointer;
       }
-
     }
 
     input {

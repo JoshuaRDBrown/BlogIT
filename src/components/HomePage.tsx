@@ -11,7 +11,6 @@ interface IProps {
   creatingNewPost: boolean,
   createNewPost: ((title: string, body: string) => void),
   genericProfilePicture: string,
-  darkMode: boolean,
 }
 
 const HomePage: React.SFC<IProps> = (props) => {
@@ -43,7 +42,7 @@ const HomePage: React.SFC<IProps> = (props) => {
           </div>
         </>
       }
-      <div className='content-container' style={{backgroundColor: props.darkMode ? '$darkmode-grey' : '$grey'}}>
+      <div className='content-container'>
         <div className='content-item'>
           <span>Filter:</span>
           <select>
@@ -59,7 +58,7 @@ const HomePage: React.SFC<IProps> = (props) => {
         props.posts.map((post) => {
           return(
             <Link key={post.content.id} to={`/posts/${post.content.id}`}>
-              <div className='content-item post' style={{backgroundColor: props.darkMode ? '$darkmode-bg' : 'white'}}>
+              <div className='content-item post'>
                 <div className='information-section'>
                   <Link to={`/user/${post.content.userId}`}>
                     <img alt='profile' src={post.content.photoURL}/>
