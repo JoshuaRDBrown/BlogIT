@@ -1,8 +1,9 @@
 import Comment from './Comment';
+import {Reaction } from './Reactions'
 
 export interface Posts {
-  likes: number,
-  dislikes: number,
+  likes: Reaction[] | [],
+  dislikes: Reaction[] | [],
   comments: Comment[],
   content: { 
     id: number, 

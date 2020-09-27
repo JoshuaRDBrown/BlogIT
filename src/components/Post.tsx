@@ -7,6 +7,7 @@ import addReaction from '../services/addReaction';
 import Comment from '../models/Comment';
 import { Link } from 'react-router-dom';
 import { Posts } from '../models/Posts';
+import { Reaction } from '../models/Reactions';
 import PostCommentSection from './PostCommentSection';
 
 interface PostParams {
@@ -16,8 +17,8 @@ interface PostParams {
 function Post(props: RouteComponentProps<PostParams>) {
 
   const [postData, setPostData] = useState<Posts>({
-    likes: 0,
-    dislikes: 0,
+    likes: [],
+    dislikes: [],
     comments: [],
     content: { 
       id: 0, 
@@ -32,9 +33,12 @@ function Post(props: RouteComponentProps<PostParams>) {
 
   const [existingComments, setExistingComments] = useState<Comment[]>([])
   const [commentContent, setCommentContent] = useState<string>('');
-  const[likes, setLikes] = useState(0);
-  const[dislikes, setDislikes] = useState(0);
+  const [likes, setLikes] = useState<Reaction[]>([]);
+  const [dislikes, setDislikes] = useState<Reaction[]>([]);
+  const [userHasLiked, setUserHasLiked] = useState(false);
+  const [userHasDisliked, setUserHasDisliked] = useState(false);
   const isMounted = useRef<boolean>(false);
+  
 
   useEffect(():any => {
     isMounted.current = true;
@@ -42,18 +46,47 @@ function Post(props: RouteComponentProps<PostParams>) {
     const ref = db.doc(`posts/${props.match.params.id}`)
     ref.get().then((doc: any) => {
       if(doc.exists && isMounted.current) {
-        setPostData(doc.data());
-        setExistingComments(doc.data().comments ? doc.data().comments : [])
-        setLikes(postData.likes);
-        setDislikes(postData.dislikes);
+        let store = doc.data()
+        setPostData(store);
+        setExistingComments(store.comments ? store.comments.reverse() : [])
+        setLikes(store['likes'] ? store['likes']  : []);
+        setDislikes(store['dislikes'] ? store['dislikes'] : []);
+        if(store['likes']) {
+          const hasLiked = store['likes'].some((reaction: {uid: String}) => {
+            return reaction.uid === fb.auth().currentUser?.uid 
+          })
+          setUserHasLiked(hasLiked)
+        }
+
+        if(store['dislikes']) {
+          const hasDisliked = store['dislikes'].some((reaction: {uid: String}) => {
+            return reaction.uid === fb.auth().currentUser?.uid 
+          })
+          setUserHasDisliked(hasDisliked)
+        }
       }
     });
     return ()=> isMounted.current = false; //make sure memory doesn't leak by only fetching data if component is mounted
-  }, [setPostData, setExistingComments, props.match.params.id, setLikes, setDislikes]);
+  }, [setPostData, setExistingComments, props.match.params.id, setLikes, setDislikes, setUserHasDisliked, setUserHasLiked]);
 
   const onPostClick = () => {
     const updateComments = submitComment(existingComments, commentContent, props.match.params.id);
     setExistingComments(updateComments);
+  }
+
+  const onReactionClick = (type: string) => {
+    if((type === "likes" && !userHasLiked) || (type === "dislikes" && !userHasDisliked)) {
+      const newReaction = addReaction(type, postData.content.id, fb.auth().currentUser?.displayName!, fb.auth().currentUser?.uid!, fb.auth().currentUser?.photoURL!, userHasLiked, userHasDisliked)
+      if(type === "likes") {
+        likes.push(newReaction)
+        setUserHasLiked(true)
+        setUserHasDisliked(false)
+      } else {
+        dislikes.push(newReaction)
+        setUserHasDisliked(true)
+        setUserHasLiked(false)
+      }
+    } 
   }
 
   document.title = `Post: ${postData.content.title}`;
@@ -73,10 +106,18 @@ function Post(props: RouteComponentProps<PostParams>) {
           </div>
         </div>
         <div className='postStats'>
-          <img onClick={()=> addReaction('likes', postData.content.id)} src={process.env.PUBLIC_URL + '/assets/like.svg'} />
-          <span>{likes}</span>
-          <img src={process.env.PUBLIC_URL + '/assets/like.svg'} />
-          <span>{dislikes}</span>
+          <img 
+            onClick={()=> onReactionClick("likes")} 
+            src={process.env.PUBLIC_URL + '/assets/like.svg'} 
+            className={userHasLiked ? 'liked' : ''}
+          />
+          <span>{likes.length}</span>
+          <img 
+            onClick={()=> onReactionClick("dislikes")} 
+            src={process.env.PUBLIC_URL + '/assets/like.svg'}
+            className={userHasDisliked ? 'disliked' : ''} 
+          />
+          <span>{dislikes.length}</span>
           <img src={process.env.PUBLIC_URL + '/assets/comments.svg'} />
           <span>{existingComments.length || '0'}</span>
         </div>

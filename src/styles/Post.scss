@@ -151,6 +151,15 @@
       img {
         width: 40px;
         height: 40px;
+        cursor: pointer;
+      }
+
+      .liked {
+        filter: invert(55%) sepia(16%) saturate(2112%) hue-rotate(63deg) brightness(98%) contrast(94%);
+      }
+
+      .disliked {
+        filter: invert(35%) sepia(20%) saturate(4785%) hue-rotate(334deg) brightness(82%) contrast(113%);
       }
 
       img:nth-child(3) {

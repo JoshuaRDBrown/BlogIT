@@ -66,8 +66,8 @@ const HomePage: React.SFC<IProps> = (props) => {
                   </Link>
                   <div className='stats'>
                     <span>{timeFormatter(post.content.time)}</span>
-                    <span><b>Likes:</b> {post.likes || 0}</span>
-                    <span><b>Dislikes:</b> {post.dislikes || 0}</span>
+                    <span><b>Likes:</b> {post.likes ? post.likes.length : '0'}</span>
+                    <span><b>Dislikes:</b> {post.dislikes ? post.dislikes.length : '0'}</span>
                     <span><b>Comments:</b> {post.comments ? `${post.comments.length}` : '0'}</span>
                   </div>
                 </div>

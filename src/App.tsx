@@ -90,8 +90,11 @@ export default class App extends React.Component<{}, IState> {
 		const snapshot = await fb.firestore().collection('/posts').get();
 		const postData = snapshot.docs.map(doc => doc.data());
 		const sortedPostData = postData.sort((a, b) => b.content.time.toString().localeCompare(a.content.time.toString()));
-		const currentUserPosts = sortedPostData.filter(post => post.content.author === this.state.userObj.displayName);
-		this.setState({ posts: sortedPostData, currentUserPosts: currentUserPosts });
+		// let currentUserPosts;
+		// if(this.state.userObj.displayName) {
+		// 	currentUserPosts = sortedPostData.filter(post => post.content.author === this.state.userObj.displayName);
+		// }
+		this.setState({ posts: sortedPostData });
 	}
 
 	private updateInitialInformation(username: string, profilePictureURL: string, userProfileBio: string):void {
@@ -137,7 +140,7 @@ export default class App extends React.Component<{}, IState> {
 			Object.freeze(content);
 
 			fb.firestore().collection('/posts').doc(randomId).set({
-				content
+				content,
 			});
 			this.state.posts.splice(0, 0, { content });
 			this.setState({ creatingNewPost: false });
