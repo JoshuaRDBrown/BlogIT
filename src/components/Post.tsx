@@ -8,7 +8,9 @@ import Comment from '../models/Comment';
 import { Link } from 'react-router-dom';
 import { Posts } from '../models/Posts';
 import { Reaction } from '../models/Reactions';
+import { RecentlyViewedPosts } from '../models/RecentlyViewedPosts';
 import PostCommentSection from './PostCommentSection';
+import getAndSetLocalStorage from '../services/getAndSetLocalStorage';
 
 interface PostParams {
   id: string,
@@ -38,7 +40,6 @@ function Post(props: RouteComponentProps<PostParams>) {
   const [userHasLiked, setUserHasLiked] = useState(false);
   const [userHasDisliked, setUserHasDisliked] = useState(false);
   const isMounted = useRef<boolean>(false);
-  
 
   useEffect(():any => {
     isMounted.current = true;
@@ -48,9 +49,11 @@ function Post(props: RouteComponentProps<PostParams>) {
       if(doc.exists && isMounted.current) {
         let store = doc.data()
         setPostData(store);
+        console.log(store)
         setExistingComments(store.comments ? store.comments.reverse() : [])
         setLikes(store['likes'] ? store['likes']  : []);
         setDislikes(store['dislikes'] ? store['dislikes'] : []);
+
         if(store['likes']) {
           const hasLiked = store['likes'].some((reaction: {uid: String}) => {
             return reaction.uid === fb.auth().currentUser?.uid 
@@ -63,6 +66,23 @@ function Post(props: RouteComponentProps<PostParams>) {
             return reaction.uid === fb.auth().currentUser?.uid 
           })
           setUserHasDisliked(hasDisliked)
+        }
+
+        const recentlyViewedPosts = getAndSetLocalStorage('get', 'recentlyViewedPosts')
+        let postIsAlreadyInList;
+        if(recentlyViewedPosts) {
+           postIsAlreadyInList = recentlyViewedPosts.some((post: RecentlyViewedPosts) => {
+            return post.postId === props.match.params.id
+          })
+        }
+        
+        if(!postIsAlreadyInList) {
+          getAndSetLocalStorage('set', 'recentlyViewedPosts', {
+            postId: props.match.params.id, 
+            postTitle: store.content.title, 
+            author: store.content.author,
+            timeViewed: Date.now()
+          })
         }
       }
     });

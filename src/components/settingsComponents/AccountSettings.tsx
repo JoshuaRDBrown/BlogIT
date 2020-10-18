@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import fb from '../../config/fireBase';
 import ReactTooltip from 'react-tooltip';
+import getAndSetLocalStorage from '../../services/getAndSetLocalStorage'
 
 interface Props {
   userObj: any,
@@ -38,7 +39,7 @@ const AccountSettings: React.SFC<Props> = (props) => {
 
   const updateAccountInfo = ():void => {
     const user = fb.auth().currentUser;
-    const coolDown = localStorage.getItem('userNameCoolDown') || false;
+    const coolDown = getAndSetLocalStorage('get', 'userNameCoolDown')
 
     if(coolDown) {
       if(parseInt(coolDown) < Date.now()) {
@@ -55,7 +56,7 @@ const AccountSettings: React.SFC<Props> = (props) => {
     const currentDate = new Date();
     const coolDownDate = currentDate.setDate(currentDate.getDate() + 30); //sets a cool down of 30 days in which a user can change their username. 
 
-    localStorage.setItem('userNameCoolDown', coolDownDate.toString())
+    getAndSetLocalStorage('set', 'userNameCoolDown', coolDownDate.toString())
 
     if(email !== props.userObj.email) {
       user?.updateEmail(email).then(() => {
@@ -93,7 +94,7 @@ const AccountSettings: React.SFC<Props> = (props) => {
                   [field.name]: e.target.value
                 }))}}
                 id='userInfoInput' 
-                placeholder={field.name === 'oldPassword' ? 'Old Password' : 'New Password'} 
+                placeholder={field.name === 'oldPassword' ? 'Old Password' : field.name.includes('Password') ? 'New Password' : ''} 
                 defaultValue={field.value === '' ? null : field.value}
               />
               <ReactTooltip />

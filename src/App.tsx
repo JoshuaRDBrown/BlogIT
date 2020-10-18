@@ -10,6 +10,7 @@ import Post from './components/Post';
 import createRandomId from './services/createRandomId';
 import PageNotFound from './components/PageNotFound';
 import Settings from './components/Settings';
+import getAndSetLocalStorage from './services/getAndSetLocalStorage';
 interface IState {
 	userObj?: any
 	isFirstLogin: boolean,
@@ -39,15 +40,6 @@ export default class App extends React.Component<{}, IState> {
 	componentDidMount() {
 		this.onAuth();
 		this.setState({ isOnline: true });
-	
-		// let menu:any = document.getElementsByClassName('user-menu');
-		// if(menu) {
-		// 	window.addEventListener('mouseup', (event: any)=> {
-		// 		if(event.target !== menu && event.target.parentNode !== menu) {
-		// 			this.setState({ viewingAccountMenu: false });
-		// 		}
-		// 	});
-		// }
 	}
 
 	componentWillUnmount() {
@@ -90,11 +82,11 @@ export default class App extends React.Component<{}, IState> {
 		const snapshot = await fb.firestore().collection('/posts').get();
 		const postData = snapshot.docs.map(doc => doc.data());
 		const sortedPostData = postData.sort((a, b) => b.content.time.toString().localeCompare(a.content.time.toString()));
-		// let currentUserPosts;
-		// if(this.state.userObj.displayName) {
-		// 	currentUserPosts = sortedPostData.filter(post => post.content.author === this.state.userObj.displayName);
-		// }
-		this.setState({ posts: sortedPostData });
+		const currentUserPosts = postData.filter((post) => {
+			return post.content.userId === this.state.userObj?.uid
+		})
+
+		this.setState({ posts: sortedPostData, currentUserPosts: currentUserPosts });
 	}
 
 	private updateInitialInformation(username: string, profilePictureURL: string, userProfileBio: string):void {

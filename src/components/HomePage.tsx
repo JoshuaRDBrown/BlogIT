@@ -3,6 +3,8 @@ import FirstLoginForm from './FirstLoginForm';
 import timeFormatter from '../services/timeFormatter';
 import { Link } from 'react-router-dom';
 import { Posts } from '../models/Posts';
+import getAndSetLocalStorage from '../services/getAndSetLocalStorage';
+import RecentlyViewed from './RecentlyViewed';
 
 interface IProps {
   isFirstLogin: boolean,
@@ -17,6 +19,13 @@ const HomePage: React.SFC<IProps> = (props) => {
 
   const [title, setPostTitle] = useState('');
   const [body, setPostBody] = useState('');
+
+  let recentlyViewed = getAndSetLocalStorage('get', 'recentlyViewedPosts')
+  if(recentlyViewed.length >= 3) {
+    recentlyViewed.reverse()
+    recentlyViewed = [recentlyViewed[0], recentlyViewed[1], recentlyViewed[2]]
+    window.localStorage.setItem('recentlyViewedPosts', JSON.stringify(recentlyViewed))
+  }
 
   document.title = 'Home'
 
@@ -42,6 +51,11 @@ const HomePage: React.SFC<IProps> = (props) => {
           </div>
         </>
       }
+
+      <div className='left-container'>
+        <RecentlyViewed posts={recentlyViewed} />
+      </div>
+
       <div className='content-container'>
         <div className='content-item'>
           <span>Filter:</span>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import dateFormatter from '../services/dateFormatter';
 import fb from '../config/fireBase';
@@ -21,13 +21,15 @@ function UserProfile(props: RouteComponentProps<IProps>) {
   //const [creationDate, lastSignIn] = dates;
   const [profileData, setProfileData] = useState<UserProfile>({ displayName: '', description: '', dateCreated: '', isOnline: false, photoURL: '', });
 
-  const db = fb.firestore();
-  const ref = db.doc(`profiles/${props.match.params.id}`)
-  ref.get().then((doc: any) => {
-    if(doc.exists) {
-      setProfileData(doc.data());
-    }
-  });
+  useEffect(() => {
+    const db = fb.firestore();
+    const ref = db.doc(`profiles/${props.match.params.id}`)
+    ref.get().then((doc: any) => {
+      if(doc.exists) {
+        setProfileData(doc.data());
+      }
+    });
+  }, [setProfileData])
 
   document.title = `${profileData?.displayName}'s profile`;
   return(
