@@ -10,6 +10,13 @@
   flex-direction: column;
   align-items: center;
 
+  .user-post-view {
+    width: 30%;
+    position: absolute;
+    left: 44.5%;
+    top: 350px;
+  }
+
   .posts-action-bar {
     width: 32%;
     background-color: white;

@@ -6,11 +6,12 @@ import { BrowserRouter as Router, Switch, Route, Redirect, Link } from 'react-ro
 import Login from './components/Login';
 import HomePage from './components/HomePage';
 import UserProfile from './components/UserProfile';
-import Post from './components/Post';
+import PostPage from './components/PostPage';
 import createRandomId from './services/createRandomId';
 import PageNotFound from './components/PageNotFound';
 import Settings from './components/Settings';
 import getAndSetLocalStorage from './services/getAndSetLocalStorage';
+import createOrUpdatePost from './services/createOrUpdatePost';
 interface IState {
 	userObj?: any
 	isFirstLogin: boolean,
@@ -117,28 +118,11 @@ export default class App extends React.Component<{}, IState> {
 	}
 
 	private createNewPost(title: string, body: string): void {
-		if(title !== '' && body !== '') {
-			const randomId = createRandomId();
-			const time = Math.floor(Date.now() / 1000);
-			const content = {
-				id: randomId,
-				title: title,
-				body: body,
-				time: time,
-				author: this.state.userObj.displayName,
-				photoURL: this.state.userObj.photoURL,
-				userId: this.state.userObj.uid,
-			}
-			Object.freeze(content);
-
-			fb.firestore().collection('/posts').doc(randomId).set({
-				content,
-			});
-			this.state.posts.splice(0, 0, { content });
-			this.setState({ creatingNewPost: false });
-		} else {
-			//throw some error about adding text to post
-		}
+		console.log(title, body)
+		let content = createOrUpdatePost("CREATE", title, body)
+		console.log(content)
+		this.state.posts.splice(0, 0, { content });
+		this.setState({ creatingNewPost: false });
 	}
 
 	public render() {
@@ -217,7 +201,7 @@ export default class App extends React.Component<{}, IState> {
 							<Route path='/404'>
 								<PageNotFound />
 							</Route>
-							<Route path='/posts/:id' component={Post} />
+							<Route path='/posts/:id' component={PostPage} />
 						</>
 					}
 				</Switch>

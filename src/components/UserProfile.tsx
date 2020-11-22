@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router';
 import dateFormatter from '../services/dateFormatter';
 import fb from '../config/fireBase';
 import { Posts } from '../models/Posts';
+import Post from './Post';
 import { Link } from 'react-router-dom';
 
 interface RouteProps {
@@ -115,14 +116,9 @@ function UserProfile(props: RouteComponentProps<RouteProps>) {
             <option>Popular</option>
           </select>
         </div>
-        {filteredPosts.map((post: Posts)=> {
-          return(
-            <div className='post'>
-              <p id='post-title'>{post.content.title}</p>
-              <p id='post-desc'>{post.content.body.slice(0,100)} <Link to={`/posts/${post.content.id}`}>Read more...</Link></p>
-            </div>
-          )
-        })}
+        <div className='user-post-view'>
+          {/* <Post postData={filteredPosts}/> */}
+        </div>
       </div>
     </>
   )

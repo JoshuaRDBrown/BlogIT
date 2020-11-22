@@ -1,0 +1,49 @@
+.new-post-form {
+  z-index: 3;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 50%;
+  height: fit-content;
+  position: fixed;
+  top: 100px;
+  border: 1px solid $border-grey;
+  border-radius: 10px;
+  padding: 20px;
+
+  span {
+    font-size: 35px;
+    margin-bottom: 20px;
+  }
+
+  input {
+    width: 50%;
+    height: 40px;
+    font-size: 20px;
+    padding-left: 10px;
+    margin-bottom: 20px;
+    border: 2px solid $border-grey;
+    width: 90%;
+  }
+
+  textarea {
+    resize: none;
+    width: 89%;
+    height: 300px;
+    padding: 10px;
+    border: 2px solid $border-grey;
+  }
+
+  button {
+    margin-top: 20px;
+    width: 100px;
+    height: 40px;
+    border: none;
+    background-color: $submit-button-green;
+    color: white;
+    font-size: 20px;
+    outline: none;
+    cursor: pointer;
+  }
+}

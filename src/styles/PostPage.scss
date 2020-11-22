@@ -1,0 +1,235 @@
+.post-container {
+  position: absolute;
+  top: 74px;
+  width: 100%;
+  height: fit-content;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  word-wrap: break-word;
+  background-color: $grey;
+
+  .post-box:last-child {
+    margin-bottom: 40px;
+  }
+
+  .post-box {
+    margin-top: 30px;
+    background-color: white;
+    width: 70%;
+    height: fit-content;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+
+    .post-top {
+      display: flex;
+      justify-content: space-between;
+      padding: none;
+
+      .post-actions-menu {
+        background-color: white;
+        border: 1px solid $border-grey;
+        position: relative;
+        width: 150px;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        float: right;
+
+        button {
+          background: transparent;
+          border: none;
+          border-bottom: 1px solid $border-grey;
+          cursor: pointer;
+          padding: 10px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          font-size: 17.5px;
+
+          span {
+            margin-left: 10px;
+          }
+
+          img {
+            width: 25px;
+            height: 25px;
+            margin-top: 2px;
+          }
+        }
+
+        button:nth-child(2) {
+          border: none;
+        }
+
+        button:hover {
+          transition: 0.5s;
+          background-color: $orange;
+        }
+
+        #delete:hover {
+          transition: 0.5s;
+          background-color: $title-red !important;
+          color: white;
+        }        
+      }
+
+      #post-author-actions {
+        height: 45px;
+        width: 40px;
+        vertical-align: top;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+      }
+    }
+
+    .comment {
+      &--content {
+        margin-top: 20px;
+        margin-bottom: 10px;  
+      }
+
+      #commentTime {
+        color: $text-grey;
+      }
+
+      .commentAuthor {
+        display: flex;
+        align-items: flex-start;
+        min-width: 50%;
+
+        #post-author-badge {
+          font-size: 15px;
+          background-color: $submit-button-green;
+          color: white;
+          padding: 5px;
+        }
+        
+        span {
+          margin-left: 10px;
+          font-size: 20px;
+        }
+      }
+    }
+
+    .comment-section {
+      display: flex;
+      align-items: center;
+
+      textarea {
+        width: 80%;
+        height: 40px;
+        margin-left: 20px;
+        resize: none;
+        border: 2px solid $border-grey;
+        border-radius: 5px;
+        padding: 5px;
+      }
+
+      button {
+        width: 120px;
+        height: 40px;
+        margin-left: 45px;
+        border: none;
+        background-color: $submit-button-green;
+        font-size: 20px;
+        color: white;
+        cursor: pointer;
+      }
+    }
+
+    input {
+      width: 80%;
+    }
+
+    img {
+      width: 50px;
+      height: 50px;
+    }
+
+    #title {
+      font-size: 30px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    hr {
+      width: 30%;
+    }
+
+    #body {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .postFooter {
+      border-top: 1px solid $grey;
+      padding-top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      .user-info {
+        display: flex;
+        align-items: center;
+
+        a {
+          margin-left: 10px;
+          font-size: 20px;
+        }
+      }
+
+      .timestamp {
+        span {
+          color: $text-grey;
+        }
+      }
+     
+      span:nth-child(3) {
+        color: $text-grey;
+      }
+
+      img {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    .postStats {
+      width: 100%;
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      span {
+        font-size: 30px;
+        margin: 0 20px 10px 10px;
+      }
+
+      img {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+      }
+
+      .liked {
+        filter: invert(55%) sepia(16%) saturate(2112%) hue-rotate(63deg) brightness(98%) contrast(94%);
+      }
+
+      .disliked {
+        filter: invert(35%) sepia(20%) saturate(4785%) hue-rotate(334deg) brightness(82%) contrast(113%);
+      }
+
+      img:nth-child(3) {
+        -ms-transform: rotate(180deg); /* IE 9 */
+        transform: rotate(180deg);
+        margin-top: -10px;
+      }
+    }
+  }
+}

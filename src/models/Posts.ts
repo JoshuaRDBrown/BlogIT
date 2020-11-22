@@ -13,5 +13,7 @@ export interface Posts {
     author: string, 
     photoURL: string, 
     time: number, 
+    timeUpdated: number,
+    isEdited: boolean
   }
 }

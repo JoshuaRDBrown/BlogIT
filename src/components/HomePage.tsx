@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import FirstLoginForm from './FirstLoginForm';
-import timeFormatter from '../services/timeFormatter';
-import { Link } from 'react-router-dom';
 import { Posts } from '../models/Posts';
 import getAndSetLocalStorage from '../services/getAndSetLocalStorage';
 import RecentlyViewed from './RecentlyViewed';
+import Post from './Post';
+import PostCreationForm from './PostCreationForm';
+import { FormTypes } from '../enums/FormTypes';
 
 interface IProps {
   isFirstLogin: boolean,
@@ -19,6 +20,10 @@ const HomePage: React.SFC<IProps> = (props) => {
 
   const [title, setPostTitle] = useState('');
   const [body, setPostBody] = useState('');
+
+  const passCreateNewPost = (title: string, body: string) => {
+    props.createNewPost(title, body)
+  }
 
   let recentlyViewed = getAndSetLocalStorage('get', 'recentlyViewedPosts')
   if(recentlyViewed.length >= 3) {
@@ -35,21 +40,7 @@ const HomePage: React.SFC<IProps> = (props) => {
         <FirstLoginForm updateInitialInformation={props.updateInitialInformation} genericProfilePicture={props.genericProfilePicture} />
       }
       {props.creatingNewPost &&
-        <>
-          <div className='overlay'></div>
-          <div className='new-post-form'>
-            <span>Create new post</span>
-            <input
-              placeholder='Post title'
-              onChange={e => setPostTitle(e.target.value)}
-            />
-            <textarea
-              placeholder='Speak your mind...'
-              onChange={e => setPostBody(e.target.value)}
-            />
-            <button onClick={()=> props.createNewPost(title, body)}>Post</button>
-          </div>
-        </>
+        <PostCreationForm formTitle="Create new post" formType={FormTypes.create} createNewPost={passCreateNewPost} />
       }
 
       <div className='left-container'>
@@ -69,32 +60,8 @@ const HomePage: React.SFC<IProps> = (props) => {
 
           </div><br/>
         {props.posts && props.posts.length !== 0 ?
-        props.posts.map((post) => {
-          return(
-            <Link key={post.content.id} to={`/posts/${post.content.id}`}>
-              <div className='content-item post'>
-                <div className='information-section'>
-                  <Link to={`/user/${post.content.userId}`}>
-                    <img alt='profile' src={post.content.photoURL}/>
-                    <span>{post.content.author}</span>
-                  </Link>
-                  <div className='stats'>
-                    <span>{timeFormatter(post.content.time)}</span>
-                    <span><b>Likes:</b> {post.likes ? post.likes.length : '0'}</span>
-                    <span><b>Dislikes:</b> {post.dislikes ? post.dislikes.length : '0'}</span>
-                    <span><b>Comments:</b> {post.comments ? `${post.comments.length}` : '0'}</span>
-                  </div>
-                </div>
-                <span id='title'>{post.content.title}</span>
-                <div className='content'>
-                  <span>{post.content.body}</span>
-                </div>
-              </div>
-            </Link>
-          )
-        }):
-        <h1>No posts</h1>
-      }
+          <Post postData={props.posts}/> : <h1>No posts</h1>
+        }
       </div>
     </div>
   )
