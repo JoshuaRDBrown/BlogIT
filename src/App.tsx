@@ -12,6 +12,7 @@ import PageNotFound from './components/PageNotFound';
 import Settings from './components/Settings';
 import getAndSetLocalStorage from './services/getAndSetLocalStorage';
 import createOrUpdatePost from './services/createOrUpdatePost';
+import UserInformation from './models/UserInformation';
 interface IState {
 	userObj?: any
 	isFirstLogin: boolean,
@@ -90,17 +91,18 @@ export default class App extends React.Component<{}, IState> {
 		this.setState({ posts: sortedPostData, currentUserPosts: currentUserPosts });
 	}
 
-	private updateInitialInformation(username: string, profilePictureURL: string, userProfileBio: string):void {
-		console.log(username, profilePictureURL)
+	private updateInitialInformation(userObj: UserInformation):void {
 		//TODO check if the username already exists
 		fb.auth().currentUser?.updateProfile({
-			displayName: username,
-			photoURL: profilePictureURL || this.state.defaultProfilePicture,
+			displayName: userObj.displayName,
+			photoURL: userObj.photoURL || this.state.defaultProfilePicture,
 		});
 		fb.firestore().collection('/profiles').doc(this.state.userObj.uid).set({
-			displayName: username,
-			photoURL: profilePictureURL || this.state.defaultProfilePicture,
-			description: userProfileBio,
+			displayName: userObj.displayName,
+			photoURL: userObj.photoURL || this.state.defaultProfilePicture,
+			description: userObj.description,
+			occupation: userObj.occupation,
+			location: userObj.location,
 			isOnline: true,
 			dateCreated: this.state.userObj.metadata.creationTime,
 		});

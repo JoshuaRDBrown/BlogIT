@@ -6,10 +6,11 @@ import RecentlyViewed from './RecentlyViewed';
 import Post from './Post';
 import PostCreationForm from './PostCreationForm';
 import { FormTypes } from '../enums/FormTypes';
+import UserInformation from '../models/UserInformation';
 
 interface IProps {
   isFirstLogin: boolean,
-  updateInitialInformation: ((username: string, profilePictureURL: string, userProfileBio: string) => void),
+  updateInitialInformation: ((userObj: UserInformation) => void),
   posts: Posts[],
   creatingNewPost: boolean,
   createNewPost: ((title: string, body: string) => void),
