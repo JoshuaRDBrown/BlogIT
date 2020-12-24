@@ -34,6 +34,7 @@ const AccountSettings: React.SFC<Props> = (props) => {
   });
 
   const [canChangeUserName, setChangeUserName] = useState(false);
+  const [formHasError, setFormHasError] = useState(false);
 
   const { displayName, email, phoneNumber, oldPassword, newPassword } = updatedSettings;
 
@@ -64,6 +65,8 @@ const AccountSettings: React.SFC<Props> = (props) => {
       }).catch((err) => {
         console.log(err)
       });
+    } else {
+      setFormHasError(true)
     }
 
     if(newPassword !== '' && newPassword !== oldPassword) {
@@ -72,6 +75,8 @@ const AccountSettings: React.SFC<Props> = (props) => {
       }).catch((err) => {
         console.log(err);
       })
+    } else {
+      setFormHasError(true)
     }
   }
   return(
@@ -104,6 +109,9 @@ const AccountSettings: React.SFC<Props> = (props) => {
         }
       </div>
       <button onClick={()=> updateAccountInfo()}>Save changes</button>
+      {formHasError && 
+        <p>An error occurred: Please enter valid data.</p>
+      }
     </>
   )
 }

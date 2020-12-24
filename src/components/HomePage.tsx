@@ -21,6 +21,7 @@ const HomePage: React.SFC<IProps> = (props) => {
 
   const [title, setPostTitle] = useState('');
   const [body, setPostBody] = useState('');
+  const [closePostCreation, setClosePostCreation] = useState(false)
 
   const passCreateNewPost = (title: string, body: string) => {
     props.createNewPost(title, body)
@@ -49,19 +50,8 @@ const HomePage: React.SFC<IProps> = (props) => {
       </div>
 
       <div className='content-container'>
-        <div className='content-item'>
-          <span>Filter:</span>
-          <select>
-            <option value="volvo">Popular</option>
-            <option value="saab">Newest</option>
-            <option value="opel">Official</option>
-            <option value="audi">Admin</option>
-          </select>
-          <input placeholder='Search posts' />
-
-          </div><br/>
         {props.posts && props.posts.length !== 0 ?
-          <Post postData={props.posts}/> : <h1>No posts</h1>
+          <Post postData={props.posts} boxSize="50"/> : <p>There are currently no posts to show.</p>
         }
       </div>
     </div>

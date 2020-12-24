@@ -10,18 +10,17 @@
   flex-direction: column;
   align-items: center;
 
-  .user-post-view {
-    width: 30%;
-    position: absolute;
-    left: 44.5%;
-    top: 350px;
+  .content-item {
+    position: relative;
+    left: 51.5%;
+    top: 70px;
   }
 
   .posts-action-bar {
-    width: 32%;
+    width: 40%;
     background-color: white;
     position: absolute;
-    left: 47.5%;
+    left: 50%;
     top: 400px;
     border-radius: 14px;
     display: flex; 
@@ -50,32 +49,10 @@
       border-radius: 50%;
       background-color: $title-red;
     }
-
-
-  }
-
-  .post {
-    background-color: white;
-    width: 30%;
-    position: relative;
-    left: 13.5%;
-    top: 100px;
-    margin-bottom: 20px;
-    padding: 20px;
-    border-radius: 14px;
-
-    #post-title {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    #post-desc {
-      color: $text-grey;
-    }
   }
 
   .profile-banner {
-    width: 60%;
+    width: 80%;
     height: 280px;
     background-color: white;
     border-radius: 14px;
@@ -97,7 +74,7 @@
       padding-bottom: 20px;
     }
 
-    img {
+    #profile {
       width: 200px;
       height: 200px;
       border-radius: 50%;
@@ -108,11 +85,11 @@
   }
 
   .info-box {
-    width: 20%;
+    width: 30%;
     background-color: white;
     border-radius: 14px;
     position: absolute;
-    left: 20%;
+    left: 10%;
     top: 400px;
     padding: 20px;
     display: flex;
@@ -148,10 +125,5 @@
     span:nth-child(odd) {
       color: $text-grey;
     }
-
-
   }
-
-
-
 }

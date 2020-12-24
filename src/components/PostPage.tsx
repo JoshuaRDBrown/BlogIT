@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { RouteComponentProps } from 'react-router';
 import fb from '../config/fireBase';
 import timeFormatter from '../services/timeFormatter';
@@ -15,6 +15,7 @@ import removePost from '../services/removePost';
 import PostCreationForm from './PostCreationForm';
 import { FormTypes } from '../enums/FormTypes'; 
 import createOrUpdatePosts from '../services/createOrUpdatePost';
+import { IsAdminContext } from '../App';
 
 interface PostParams {
   id: string,
@@ -41,14 +42,16 @@ function PostPage(props: RouteComponentProps<PostParams>) {
 
   const [existingComments, setExistingComments] = useState<Comment[]>([])
   const [commentContent, setCommentContent] = useState<string>('');
-  const [likes, setLikes] = useState<Reaction[]>([]);
-  const [dislikes, setDislikes] = useState<Reaction[]>([]);
   const [userHasLiked, setUserHasLiked] = useState(false);
   const [userHasDisliked, setUserHasDisliked] = useState(false);
   const isMounted = useRef<boolean>(false);
   const [hasClickedPostActions, setHasClickedPostActions] = useState(false);
   const [isEditingPost, setIsEditingPost] = useState(false);
   const [postNotFound, setPostNotFound] = useState(false);
+  const [likesAmount, setLikesAmount] = useState(0);
+  const [dislikesAmount, setDislikesAmount] = useState(0);
+
+  const isAdmin = useContext(IsAdminContext);
 
   useEffect(():any => {
     isMounted.current = true;
@@ -59,8 +62,8 @@ function PostPage(props: RouteComponentProps<PostParams>) {
         let store = doc.data()
         setPostData(store);
         setExistingComments(store.comments ? store.comments.reverse() : [])
-        setLikes(store['likes'] ? store['likes']  : []);
-        setDislikes(store['dislikes'] ? store['dislikes'] : []);
+        setLikesAmount(store['likes'] ? store['likes'].length : 0)
+        setDislikesAmount(store['dislikes'] ? store['dislikes'].length : 0)
 
         if(store['likes']) {
           const hasLiked = store['likes'].some((reaction: {uid: String}) => {
@@ -97,24 +100,29 @@ function PostPage(props: RouteComponentProps<PostParams>) {
       }
     });
     return ()=> isMounted.current = false; //make sure memory doesn't leak by only fetching data if component is mounted
-  }, [setPostData, setExistingComments, props.match.params.id, setLikes, setDislikes, setUserHasDisliked, setUserHasLiked]);
+  }, [setPostData, setExistingComments, props.match.params.id, setUserHasDisliked, setUserHasLiked]);
 
   const onPostClick = () => {
     const updateComments = submitComment(existingComments, commentContent, props.match.params.id);
-    setExistingComments(updateComments);
+    if(updateComments !== undefined) {
+      setExistingComments(updateComments);
+    }
   }
 
   const onReactionClick = (type: string) => {
     if((type === "likes" && !userHasLiked) || (type === "dislikes" && !userHasDisliked)) {
-      const newReaction = addReaction(type, postData.content.id, fb.auth().currentUser?.displayName!, fb.auth().currentUser?.uid!, fb.auth().currentUser?.photoURL!, userHasLiked, userHasDisliked)
-      if(type === "likes") {
-        likes.push(newReaction)
-        setUserHasLiked(true)
-        setUserHasDisliked(false)
-      } else {
-        dislikes.push(newReaction)
-        setUserHasDisliked(true)
-        setUserHasLiked(false)
+      addReaction(type, postData.content.id, fb.auth().currentUser?.displayName!, fb.auth().currentUser?.uid!, fb.auth().currentUser?.photoURL!, userHasLiked, userHasDisliked)
+      let reactionStatus = type === "likes"
+
+      setUserHasLiked(reactionStatus)
+      setUserHasDisliked(!reactionStatus)
+
+      if(type === "likes" && userHasDisliked) {
+        setLikesAmount((prevState) => prevState + 1)
+        setDislikesAmount((prevState) => prevState - 1)
+      } else if(type === "dislikes" && userHasLiked) {
+        setLikesAmount((prevState) => prevState - 1)
+        setDislikesAmount((prevState) => prevState + 1)
       }
     } 
   }
@@ -136,6 +144,11 @@ function PostPage(props: RouteComponentProps<PostParams>) {
     setIsEditingPost(false)
   }
 
+  const createNewComment = (event: any) => {
+    (document.getElementById("postBody")as HTMLInputElement).value = ""
+    onPostClick()
+  }
+
   document.title = `Post: ${postData.content.title}`;
 
   if(postNotFound) {
@@ -155,7 +168,7 @@ function PostPage(props: RouteComponentProps<PostParams>) {
         <div className='post-box'>
           <div className="post-top">
             <span id='title'>{postData.content.title}</span>
-            {postData.content.userId === fb.auth().currentUser?.uid &&
+            {(postData.content.userId === fb.auth().currentUser?.uid || isAdmin) &&
               <button id="post-author-actions" onClick={()=> setHasClickedPostActions((prevState)=> !prevState)}>
                 <img src={process.env.PUBLIC_URL + '/assets/3dots.svg'}/>
                 {hasClickedPostActions &&
@@ -194,13 +207,13 @@ function PostPage(props: RouteComponentProps<PostParams>) {
               src={process.env.PUBLIC_URL + '/assets/like.svg'} 
               className={userHasLiked ? 'liked' : ''}
             />
-            <span>{likes.length}</span>
+            <span>{likesAmount}</span>
             <img 
               onClick={()=> onReactionClick("dislikes")} 
               src={process.env.PUBLIC_URL + '/assets/like.svg'}
               className={userHasDisliked ? 'disliked' : ''} 
             />
-            <span>{dislikes.length}</span>
+            <span>{dislikesAmount}</span>
             <img src={process.env.PUBLIC_URL + '/assets/comments.svg'} />
             <span>{existingComments.length || '0'}</span>
           </div>
@@ -208,8 +221,8 @@ function PostPage(props: RouteComponentProps<PostParams>) {
         <div className='post-box'>
           <div className='comment-section'>
             <img alt='profile' src={fb.auth().currentUser?.photoURL!} />
-            <textarea onChange={e => setCommentContent(e.target.value)} placeholder='Comment on this post...' />
-            <button onClick={onPostClick}>Post</button>
+            <textarea id='postBody' onChange={e => setCommentContent(e.target.value)} placeholder='Comment on this post...' />
+            <button onClick={createNewComment}>Post</button>
           </div>
         </div>
         {existingComments.length !== 0 &&

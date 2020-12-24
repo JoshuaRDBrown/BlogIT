@@ -5,6 +5,7 @@ import timeFormatter from '../services/timeFormatter';
 
 interface Props {
   postData: Posts[]
+  boxSize: String
 }
 
 const Post: React.SFC<Props> = (props) => {
@@ -13,7 +14,7 @@ const Post: React.SFC<Props> = (props) => {
     <>
       {props.postData.map((post) => {
         return(
-          <Link id='post-box' key={post.content.id} to={`/posts/${post.content.id}`}>
+          <Link id='post-box' style={{width: `${props.boxSize}%`}} key={post.content.id} to={`/posts/${post.content.id}`}>
             <div className='content-item post'>
               <div className='information-section'>
                 <Link to={`/user/${post.content.userId}`}>

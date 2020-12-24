@@ -14,6 +14,24 @@ const PostCreationForm: React.SFC<Props> = (props) => {
 
   const [title, setPostTitle] = useState('');
   const [body, setPostBody] = useState('');
+  const [formHasError, setFormHasError] = useState(false)
+
+  const validateInput = () => {
+
+    if(title === "" || body === "") {
+      setFormHasError(true)
+      console.log(formHasError)
+      return
+    }
+
+    if(props.formType === FormTypes.create) {
+      //@ts-ignore 
+      props.createNewPost(title, body)
+    } else {
+      //@ts-ignore 
+      props.editNewPost(title, body)
+    }
+  }
 
   return(
     <>
@@ -30,12 +48,14 @@ const PostCreationForm: React.SFC<Props> = (props) => {
             placeholder='Speak your mind...'
             onChange={e => setPostBody(e.target.value)}
           />
-          {props.formType === FormTypes.create ?
-            //@ts-ignore 
-            <button onClick={()=> props.createNewPost(title, body)}>Post</button> : 
-            //@ts-ignore 
-            <button onClick={()=> props.editNewPost(title, body)}>Edit</button>
-          }
+          <div className="post-creation-footer">
+            {formHasError &&
+              <p>Post creation failed: Please ensure you have added a title and description to your post.</p>
+            }
+
+            <button onClick={()=> validateInput()}>{props.formType === FormTypes.create ? "Post" : "Edit"}</button>
+            <button>Cancel</button>
+          </div>
         </div>
     </>
   )

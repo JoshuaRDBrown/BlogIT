@@ -74,6 +74,10 @@
         }
       }
 
+      p {
+        color: $title-red;
+      }
+
       button {
         width: 125px;
         height: 40px;
@@ -81,6 +85,7 @@
         background-color: $submit-button-green;
         color: white;
         font-size: 15px;
+        cursor: pointer;
       }
     }
 

@@ -2,10 +2,12 @@ import fb from '../config/fireBase';
 import createRandomId from './createRandomId';
 import Comment from '../models/Comment';
 
-const submitComment = (existingComments: any[], commentContent: string, postId: string) => {
+const submitComment = (existingComments: any[], commentContent: string, postId: string) =>  {
   const db = fb.firestore();
 
-  console.log(Date.now())
+  if(commentContent === "") {
+    return
+  }
 
   const commentObject: Comment = Object.freeze({
     commentId: createRandomId(),

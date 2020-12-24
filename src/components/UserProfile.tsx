@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import dateFormatter from '../services/dateFormatter';
 import fb from '../config/fireBase';
 import { Posts } from '../models/Posts';
 import Post from './Post';
 import { Link } from 'react-router-dom';
+import { IsAdminContext } from '../App';
 
 interface RouteProps {
   id: string
@@ -47,8 +48,6 @@ function UserProfile(props: RouteComponentProps<RouteProps>) {
   }, [setProfileData, setUserPosts])
 
   const searchPosts = (input: string) => {
-    console.log(filteredPosts)
-
     if(input !== '') {
       const filteredPosts = userPosts.filter((post)=> {
         return post.content.title.includes(input)
@@ -60,28 +59,24 @@ function UserProfile(props: RouteComponentProps<RouteProps>) {
   }
 
   const sortPostsBy = (selection: string) => {
-
-    let sortedPosts = userPosts
-
     switch(selection) {
-      case 'Newest': 
-        sortedPosts = userPosts.sort((a, b) => a.content.time.toString().localeCompare(b.content.time.toString()));
+      case 'Newest':
+        setFilteredPosts(userPosts.reverse())
+        break;
 
       case 'Oldest':
-        sortedPosts = userPosts.sort((a, b) => b.content.time.toString().localeCompare(a.content.time.toString()));
+        const oldestPosts = userPosts.sort((a, b) => a.content.time.toString().localeCompare(b.content.time.toString()));
+        setFilteredPosts(oldestPosts)
+        break;
       
-      case 'Popular':
-        sortedPosts = userPosts.sort((a, b) => a.likes.length.toString().localeCompare(b.likes.length.toString()));
+      // case 'Popular':
+      //   sortedPosts = userPosts.sort((a, b) => a.likes.length.toString().localeCompare(b.likes.length.toString()));
     }
-
-   setFilteredPosts(sortedPosts)
-
   }
 
   document.title = `${profileData?.displayName}'s profile`;
   return(
     <>
-      {/* TODO: make post component and reuse to display posts here  */}
       <div className='profile-view'>
         <div className='profile-banner'>
           <img id='profile' src={profileData.photoURL}/>
@@ -94,10 +89,6 @@ function UserProfile(props: RouteComponentProps<RouteProps>) {
             <img title='Date joined' src={process.env.PUBLIC_URL + "/assets/calendar.png"}/>
             <span>{profileData.dateCreated}</span>
           </div>
-          {/* <div className='info-item'>
-            <span>Status:</span>
-            <span className={profileData.isOnline ? 'online' : 'offline'}>{profileData.isOnline ? 'Online' : 'Offline'}</span>
-          </div> */}
           <div className='info-item'>
             <img title='Location' src={process.env.PUBLIC_URL + "/assets/location.png"}/>
             <span>{profileData.location}</span>
@@ -116,9 +107,7 @@ function UserProfile(props: RouteComponentProps<RouteProps>) {
             <option>Popular</option>
           </select>
         </div>
-        <div className='user-post-view'>
-          {/* <Post postData={filteredPosts}/> */}
-        </div>
+        <Post postData={filteredPosts} boxSize="39"/>
       </div>
     </>
   )
