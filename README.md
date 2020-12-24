@@ -1,3 +1,16 @@
+### About this project
+
+This is a project I have built to showcase many different front end techniques, which include:
+
+- User personalisation 
+- User media (posts and editing them, including comments and liking system)
+- Settings (such as darkmode, changing username / password)
+- Sorting through data by various criteria (e.g most popular, most recent)
+- User profiles 
+- Admin controls (banning users, taking down posts)
+
+And many other smaller features I felt like would be fun to add :)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
