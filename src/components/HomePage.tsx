@@ -7,6 +7,7 @@ import Post from './Post';
 import PostCreationForm from './PostCreationForm';
 import { FormTypes } from '../enums/FormTypes';
 import UserInformation from '../models/UserInformation';
+import PostFilters from './PostFilters';
 
 interface IProps {
   isFirstLogin: boolean,
@@ -21,7 +22,8 @@ const HomePage: React.SFC<IProps> = (props) => {
 
   const [title, setPostTitle] = useState('');
   const [body, setPostBody] = useState('');
-  const [closePostCreation, setClosePostCreation] = useState(false)
+  const [closePostCreation, setClosePostCreation] = useState(false);
+  const [posts, setPosts] = useState<Posts[]>([])
 
   const passCreateNewPost = (title: string, body: string) => {
     props.createNewPost(title, body)
@@ -32,6 +34,36 @@ const HomePage: React.SFC<IProps> = (props) => {
     recentlyViewed.reverse()
     recentlyViewed = [recentlyViewed[0], recentlyViewed[1], recentlyViewed[2]]
     window.localStorage.setItem('recentlyViewedPosts', JSON.stringify(recentlyViewed))
+  }
+
+  const filterPosts = (filterBy: string) => {
+
+    let sortedPosts: Posts[] = []
+
+    console.log(filterBy)
+
+    switch (filterBy) {
+      case "popular": 
+        //@ts-ignore
+        sortedPosts = props.posts.sort((a, b) =>  {
+          let aLikes = a.likes ? a.likes.length : 0
+          let bLikes = b.likes ? b.likes.length : 0
+
+          return bLikes - aLikes
+        });
+
+        break;
+
+      case "newest":
+        sortedPosts = props.posts.sort((a, b) => {
+          return b.content.time - a.content.time;
+        })
+        break;
+    }
+
+    console.log(sortedPosts)
+
+    setPosts(sortedPosts)
   }
 
   document.title = 'Home'
@@ -47,12 +79,19 @@ const HomePage: React.SFC<IProps> = (props) => {
 
       <div className='left-container'>
         <RecentlyViewed posts={recentlyViewed} />
+        <PostFilters filterPosts={filterPosts} />
       </div>
 
       <div className='content-container'>
-        {props.posts && props.posts.length !== 0 ?
+        {posts.length !== 0 ? 
+          <Post postData={posts} boxSize="50"/> : <Post postData={props.posts} boxSize="50"/>
+      
+      }
+
+
+        {/* {props.posts && props.posts.length !== 0 ?
           <Post postData={props.posts} boxSize="50"/> : <p>There are currently no posts to show.</p>
-        }
+        } */}
       </div>
     </div>
   )

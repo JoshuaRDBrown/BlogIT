@@ -16,6 +16,8 @@ const Login: React.SFC<IProps> = (props) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [repeatPassword, setRepeatedPassword] = useState('');
+	//TODO - add form validation
+	const [formHasError, setFormHasError] = useState(false);
 
 	const userInput: SubmitObj = {
 		email: email,
@@ -27,37 +29,31 @@ const Login: React.SFC<IProps> = (props) => {
   	<div className='login-container'>
 			<div className='login-container_header'>
 				<span>BlogIT</span>
-				<div className='login-container_header-buttons-container'>
-					<button onClick={()=> setFormType('LOGIN')}>Login</button>
-					<button onClick={()=> setFormType('SIGN_UP')}>Sign up</button>
-				</div>
 			</div>
 			<div className='login-container_content'>
-				<div className='login-form'>
-					<form>
-						<h1>{formType === 'LOGIN' ? 'Login' : 'Sign up'}</h1>
-						<hr/>
-						<input 
-							placeholder='Email address'
-							onChange={e => setEmail(e.target.value)}
-						/><br/>
-						<input
-							placeholder='Password'
-							type='password'
-							onChange={e => setPassword(e.target.value)}
-						/><br/>
-						{formType === 'SIGN_UP' ?
-							<>
-								<input
-									placeholder='Repeat password'
-									type='password'
-									onChange={e => setRepeatedPassword(e.target.value)}
-								/><br/> 
-							</> :
-							<p>Forgot password?</p>
+				<div className="login-form">
+					<h1>{formType === "LOGIN" ? "Login" : "Sign up"}</h1>
+					<input placeholder="Email Address" onChange={e => setEmail(e.target.value)}/><br/>
+					<input placeholder="Password" type="password" onChange={e => setPassword(e.target.value)} /><br/>
+					{formType === "SIGN_UP" &&
+						<>
+							<input placeholder="Repeat Password" onChange={e => setRepeatedPassword(e.target.value)} type="password" /><br/>
+						</>
+					}
+					{formType !== "SIGN_UP" &&
+						<>
+							<p id='forgot-password'>Forgot password?</p><br/>
+						</>
+					}
+					<button onClick={()=> props.authUser(formType, userInput)}>Login</button>
+						{formType === "LOGIN" ?
+							<p id='create-account' onClick={()=> setFormType("SIGN_UP")}>
+								Don't have an account? Click here to create one.
+							</p> : 
+							<p id='create-account' onClick={()=> setFormType("LOGIN")}>
+								Already have an account? Click here to login.
+							</p>
 						}
-						<button type='button' onClick={()=> props.authUser(formType, userInput)}>{formType === 'LOGIN' ? 'Login' : 'Sign up'}</button>
-					</form>
 				</div>
 			</div>
     </div>

@@ -2,7 +2,7 @@
 	position: absolute;
 	top: 50px;
 	width: 60%;
-	height: 550px;
+	height: 640px;
 	border: 2px solid $border-grey;
 	border-radius: 14px;
   display: flex;
@@ -22,13 +22,18 @@
 
 	button {
 		width: 150px;
-		height: 60px;
+		height: 40px;
 		border: none;
 		background-color: $submit-button-green;
 		color: white;
 		font-size: 15px;
-		margin-top: 5px;
+		margin-top: 40px;
 		cursor: pointer;
+	}
+
+	p {
+		margin-bottom: -20px;
+		color: $title-red;
 	}
 		
 	input {

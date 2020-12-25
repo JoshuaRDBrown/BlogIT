@@ -1,3 +1,4 @@
+import { Console } from 'console';
 import React, { useState } from 'react';
 import UserInformation from '../models/UserInformation';
 interface IProps {
@@ -15,6 +16,8 @@ const FirstLoginForm: React.SFC<IProps> = (props) => {
 		occupation: ""
 	})
 
+	const [formHasError, setFormHasError] = useState(false);
+
 	const formFields = [
 		{name: "displayName", placeholder: "Username", value: userInfoObject.displayName},
 		{name: "photoURL", placeholder: "Enter a URL for your profile picture...", value: userInfoObject.photoURL},
@@ -22,6 +25,14 @@ const FirstLoginForm: React.SFC<IProps> = (props) => {
 		{name: "location", placeholder: "Location", value: userInfoObject.location},
 		{name: "occupation", placeholder: "Occupation", value: userInfoObject.occupation},
 	]
+
+	const validateInput = () => {
+		if(userInfoObject.displayName !== "" && userInfoObject.description !== "" && userInfoObject.location !== "" && userInfoObject.occupation !== "") {
+			props.updateInitialInformation(userInfoObject)
+		} else {
+			setFormHasError(true)
+		}
+	}
 
 	return(
 		<>
@@ -33,7 +44,8 @@ const FirstLoginForm: React.SFC<IProps> = (props) => {
 					return(
 						<input 
 							key={field.name}
-							placeholder={field.placeholder} 
+							placeholder={field.placeholder}
+							style={{border: field.value === "" && formHasError ? "2px solid red" : "2px solid #dcdcdc"}} 
 							value={field.value}
 							onChange={(e)=> {e.persist(); setUserInfoObject((prevState) => ({
 								...prevState,
@@ -42,8 +54,10 @@ const FirstLoginForm: React.SFC<IProps> = (props) => {
 						/>
 					)
 				})}
-				
-				<button onClick={()=> props.updateInitialInformation(userInfoObject)}>Update information</button>
+				{formHasError &&
+					<p>Please fill in all the fields.</p>
+				}
+				<button onClick={validateInput}>Submit</button>
 			</div>
 		</>
 	)
