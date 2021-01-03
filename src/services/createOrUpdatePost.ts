@@ -14,7 +14,7 @@ interface postContent {
   isEdited: boolean
 }
 
-const createOrUpdatePost = (action: string, postHeader: string, postBody: string, postId?: number, data?: any): postContent | undefined  => {
+const createOrUpdatePost = (action: string, postHeader: string, postBody: string, postId?: string, data?: any): postContent | undefined  => {
 
   if(postHeader != "" || postBody != "") {
 
@@ -62,7 +62,7 @@ const createOrUpdatePost = (action: string, postHeader: string, postBody: string
       return content;
     }
   } else {
-    console.log("error") //todo throw ui error
+    console.log("error")
   }
 }
 

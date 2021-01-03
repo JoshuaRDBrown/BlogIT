@@ -30,5 +30,32 @@
 		align-items: center;
 		flex-direction: column;
 		background-color: #cccc;
+
+		.post-creation-confirmation {
+			background-color: $submit-button-green;
+			padding: 20px;
+			position: absolute;
+			z-index: 1;
+			width: 50%;
+			display: flex;
+			align-items: center;
+			border: 1px solid #1a7332;
+
+			img {
+				width: 40px;
+				height: 40px;
+			}
+
+			span {
+				color: white;
+				font-size: 18px;
+			}
+		}
+
+		#no-results {
+			margin-top: 50px;
+			font-size: 20px;
+			color: $darkmode-bg;
+		}
 	}
 }

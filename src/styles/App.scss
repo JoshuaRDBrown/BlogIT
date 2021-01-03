@@ -35,6 +35,15 @@ h1, p, span {
   top: 0;
   z-index: 2;
 
+  #post-search-box {
+    border: 1px solid $border-grey;
+    border-radius: 14px;
+    height: 25px;
+    width: 30%;
+    padding: 10px;
+    font-size: 15px;
+  }
+
   a {
     text-decoration: none;
     color: black;
@@ -119,10 +128,10 @@ h1, p, span {
       width: 50px;
       height: 50px;
     }
-  
-    h2 {
+
+    span {
+      font-size: 20px;
       margin-left: 10px;
-      font-size: 30px;
       width: 250px;
       overflow: hidden;
       text-overflow: ellipsis;

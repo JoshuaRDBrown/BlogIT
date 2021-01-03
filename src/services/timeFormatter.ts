@@ -5,7 +5,7 @@ function timeFormatter(unixTimeStamp: number): string {
   seconds = currentDate.getSeconds() - postDate.getSeconds(),
   minutes = currentDate.getMinutes() - postDate.getMinutes(),
   hours = currentDate.getHours() - postDate.getHours(),
-  days = currentDate.getDay() - postDate.getDay(),
+  days = currentDate.getDate() - postDate.getDate(),
   months = currentDate.getMonth() - postDate.getMonth(),
   years = currentDate.getFullYear() - postDate.getFullYear();
 

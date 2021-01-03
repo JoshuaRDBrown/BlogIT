@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FormTypes } from '../enums/FormTypes';
 
 interface SubmitObj {
 	email: string,
@@ -16,13 +17,25 @@ const Login: React.SFC<IProps> = (props) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [repeatPassword, setRepeatedPassword] = useState('');
-	//TODO - add form validation
-	const [formHasError, setFormHasError] = useState(false);
+	const [formError, setFormError] = useState("");
 
 	const userInput: SubmitObj = {
 		email: email,
 		password: password,
 		repeatedPassword: repeatPassword,
+	}
+
+	const validateInput = () => {
+		if(email === "" || password === "") {
+			console.log("true1")
+			setFormError("Please enter an email address and password.")
+		} else if (formType === "SIGN_UP") {
+			if(password !== repeatPassword) {
+				setFormError("Please ensure your passwords match.")
+			}
+		} else {
+			props.authUser(formType, userInput)
+		}
 	}
 
   return(
@@ -45,7 +58,12 @@ const Login: React.SFC<IProps> = (props) => {
 							<p id='forgot-password'>Forgot password?</p><br/>
 						</>
 					}
-					<button onClick={()=> props.authUser(formType, userInput)}>Login</button>
+
+					{formError !== "" &&
+						<p id="form-error">{formError}</p>
+					}
+
+					<button onClick={validateInput}>Login</button>
 						{formType === "LOGIN" ?
 							<p id='create-account' onClick={()=> setFormType("SIGN_UP")}>
 								Don't have an account? Click here to create one.

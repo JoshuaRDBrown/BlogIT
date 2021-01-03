@@ -1,11 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
-import dateFormatter from '../services/dateFormatter';
 import fb from '../config/fireBase';
 import { Posts } from '../models/Posts';
 import Post from './Post';
-import { Link } from 'react-router-dom';
-import { IsAdminContext } from '../App';
 
 interface RouteProps {
   id: string
@@ -47,17 +44,6 @@ function UserProfile(props: RouteComponentProps<RouteProps>) {
     })
   }, [setProfileData, setUserPosts])
 
-  const searchPosts = (input: string) => {
-    if(input !== '') {
-      const filteredPosts = userPosts.filter((post)=> {
-        return post.content.title.includes(input)
-      })
-      setFilteredPosts(filteredPosts) 
-    } else {
-      setFilteredPosts(userPosts)
-    }
-  }
-
   const sortPostsBy = (selection: string) => {
     switch(selection) {
       case 'Newest':
@@ -68,9 +54,6 @@ function UserProfile(props: RouteComponentProps<RouteProps>) {
         const oldestPosts = userPosts.sort((a, b) => a.content.time.toString().localeCompare(b.content.time.toString()));
         setFilteredPosts(oldestPosts)
         break;
-      
-      // case 'Popular':
-      //   sortedPosts = userPosts.sort((a, b) => a.likes.length.toString().localeCompare(b.likes.length.toString()));
     }
   }
 
@@ -100,11 +83,9 @@ function UserProfile(props: RouteComponentProps<RouteProps>) {
         </div>
         <div className='posts-action-bar'>
           <p>Posts: <b id='post-amount'>{userPosts.length}</b></p>
-          <input placeholder='Search posts...' onChange={e => searchPosts(e.target.value)}/>
           <select onChange={e => sortPostsBy(e.target.value)}>
             <option>Newest</option>
             <option>Oldest</option>
-            <option>Popular</option>
           </select>
         </div>
         <Post postData={filteredPosts} boxSize="39"/>

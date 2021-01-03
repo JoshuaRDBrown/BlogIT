@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FormTypes } from '../enums/FormTypes';
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
   formType: FormTypes,
   createNewPost?: ((title: string, body: string) => void),
   editNewPost?: ((title: string, body: string) => void),
+  cancelPostCreation(): void
 }
 
 const PostCreationForm: React.SFC<Props> = (props) => {
@@ -18,9 +20,8 @@ const PostCreationForm: React.SFC<Props> = (props) => {
 
   const validateInput = () => {
 
-    if(title === "" || body === "") {
+    if((title === "" || body === "") && props.formType !== FormTypes.edit) {
       setFormHasError(true)
-      console.log(formHasError)
       return
     }
 
@@ -53,8 +54,13 @@ const PostCreationForm: React.SFC<Props> = (props) => {
               <p>Post creation failed: Please ensure you have added a title and description to your post.</p>
             }
 
-            <button onClick={()=> validateInput()}>{props.formType === FormTypes.create ? "Post" : "Edit"}</button>
-            <button>Cancel</button>
+            {props.formType === FormTypes.create ? 
+              <Link to="/home" style={{all: "unset"}}>
+                <button onClick={()=> validateInput()}>Post</button>
+              </Link> : <button onClick={()=> validateInput()}>Edit</button>
+            }
+            
+            <button onClick={()=> props.cancelPostCreation()}>Cancel</button>
           </div>
         </div>
     </>

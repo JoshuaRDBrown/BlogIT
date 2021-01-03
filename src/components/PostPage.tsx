@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { RouteComponentProps } from 'react-router';
 import fb from '../config/fireBase';
 import timeFormatter from '../services/timeFormatter';
 import submitComment from '../services/submitComment';
 import addReaction from '../services/addReaction';
 import Comment from '../models/Comment';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
 import { Posts } from '../models/Posts';
-import { Reaction } from '../models/Reactions';
 import { RecentlyViewedPosts } from '../models/RecentlyViewedPosts';
 import PostCommentSection from './PostCommentSection';
 import getAndSetLocalStorage from '../services/getAndSetLocalStorage';
@@ -17,18 +15,18 @@ import { FormTypes } from '../enums/FormTypes';
 import createOrUpdatePosts from '../services/createOrUpdatePost';
 import { IsAdminContext } from '../App';
 
-interface PostParams {
-  id: string,
+interface Props {
+  cancelPostCreation(): void
 }
 
-function PostPage(props: RouteComponentProps<PostParams>) {
+const PostPage: React.SFC<Props> = (props) => {
 
   const [postData, setPostData] = useState<Posts>({
     likes: [],
     dislikes: [],
     comments: [],
     content: { 
-      id: 0, 
+      id: "", 
       userId: '', 
       title: '', 
       body: '', 
@@ -52,11 +50,13 @@ function PostPage(props: RouteComponentProps<PostParams>) {
   const [dislikesAmount, setDislikesAmount] = useState(0);
 
   const isAdmin = useContext(IsAdminContext);
+  const location = useLocation()
+  const postId = location.pathname.slice(7, 13);
 
   useEffect(():any => {
     isMounted.current = true;
     const db = fb.firestore();
-    const ref = db.doc(`posts/${props.match.params.id}`)
+    const ref = db.doc(`posts/${postId}`)
     ref.get().then((doc: any) => {
       if(doc.exists && isMounted.current) {
         let store = doc.data()
@@ -83,13 +83,13 @@ function PostPage(props: RouteComponentProps<PostParams>) {
         let postIsAlreadyInList;
         if(recentlyViewedPosts) {
            postIsAlreadyInList = recentlyViewedPosts.some((post: RecentlyViewedPosts) => {
-            return post.postId === props.match.params.id
+            return post.postId === postId
           })
         }
         
         if(!postIsAlreadyInList) {
           getAndSetLocalStorage('set', 'recentlyViewedPosts', {
-            postId: props.match.params.id, 
+            postId: postId, 
             postTitle: store.content.title, 
             author: store.content.author,
             timeViewed: Date.now()
@@ -100,10 +100,10 @@ function PostPage(props: RouteComponentProps<PostParams>) {
       }
     });
     return ()=> isMounted.current = false; //make sure memory doesn't leak by only fetching data if component is mounted
-  }, [setPostData, setExistingComments, props.match.params.id, setUserHasDisliked, setUserHasLiked]);
+  }, [setPostData, setExistingComments, postId, setUserHasDisliked, setUserHasLiked]);
 
   const onPostClick = () => {
-    const updateComments = submitComment(existingComments, commentContent, props.match.params.id);
+    const updateComments = submitComment(existingComments, commentContent, postId);
     if(updateComments !== undefined) {
       setExistingComments(updateComments);
     }
@@ -114,16 +114,20 @@ function PostPage(props: RouteComponentProps<PostParams>) {
       addReaction(type, postData.content.id, fb.auth().currentUser?.displayName!, fb.auth().currentUser?.uid!, fb.auth().currentUser?.photoURL!, userHasLiked, userHasDisliked)
       let reactionStatus = type === "likes"
 
+      if(type === "likes") {
+        setLikesAmount((prevState) => prevState + 1)
+        if(userHasDisliked){
+          setDislikesAmount((prevState) => prevState - 1)
+        }
+      } else if(type === "dislikes") {        
+        setDislikesAmount((prevState) => prevState + 1)
+        if(userHasLiked) {
+          setLikesAmount((prevState) => prevState - 1)
+        }
+      }
+
       setUserHasLiked(reactionStatus)
       setUserHasDisliked(!reactionStatus)
-
-      if(type === "likes" && userHasDisliked) {
-        setLikesAmount((prevState) => prevState + 1)
-        setDislikesAmount((prevState) => prevState - 1)
-      } else if(type === "dislikes" && userHasLiked) {
-        setLikesAmount((prevState) => prevState - 1)
-        setDislikesAmount((prevState) => prevState + 1)
-      }
     } 
   }
 
@@ -163,6 +167,7 @@ function PostPage(props: RouteComponentProps<PostParams>) {
             postBodyDefaultValue={postData.content.body} 
             formType={FormTypes.edit}
             editNewPost={editNewPost}
+            cancelPostCreation={props.cancelPostCreation}
           />
         }
         <div className='post-box'>
@@ -178,7 +183,7 @@ function PostPage(props: RouteComponentProps<PostParams>) {
                       <span>Edit</span>
                     </button>
                     <Link to="/home" style={{all: "unset"}}>
-                      <button id='delete' onClick={()=> removePost(props.match.params.id)}>
+                      <button id='delete' onClick={()=> removePost(postId)}>
                         <img src={process.env.PUBLIC_URL + '/assets/delete.svg'}/>
                         <span>Delete</span>
                       </button>
@@ -196,7 +201,7 @@ function PostPage(props: RouteComponentProps<PostParams>) {
             </div>
             <div className='timestamp'>
               <span style={{float: "right"}}>{timeFormatter(postData.content.time)}</span><br/>
-              {postData.content.isEdited &&
+              {postData.content.isEdited && postData.content.timeUpdated &&
                 <span>Edited: {timeFormatter(postData.content.timeUpdated)}</span>
               }
             </div>

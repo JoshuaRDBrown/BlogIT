@@ -25,19 +25,18 @@
     top: 400px;
     border-radius: 14px;
     display: flex; 
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-
-    input {
-      width: 40%;
-      border: 2px solid $border-grey;
-      padding: 5px;
-    }
 
     select {
       width: 20%;
       border: 2px solid $border-grey;
       padding: 5px;
+      margin-right: 20px;
+    }
+
+    p {
+      margin-left: 20px;
     }
 
     #post-amount {

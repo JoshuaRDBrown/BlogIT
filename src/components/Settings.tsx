@@ -39,7 +39,7 @@ const Settings: React.SFC<Props> = (props) => {
                 <button 
                   key={setting.name} 
                   onClick={()=> setCurrentSettingView(setting.name)}
-                  style={{fontWeight: isCurrentlyViewing ? 'bold' : 'normal', color: isCurrentlyViewing ? 'black' : '#6b6b6b'}}
+                  style={{fontWeight: isCurrentlyViewing ? 500 : 'normal', color: isCurrentlyViewing ? 'black' : '#6b6b6b'}}
                 >
                 {setting.label}
                 </button>

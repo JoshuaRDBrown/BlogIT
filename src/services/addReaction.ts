@@ -1,7 +1,7 @@
 import fb from '../config/fireBase';
 import { Reaction } from '../models/Reactions'
 
-const addReaction = (reactionType: string, postId: number, username: string, uid: string, photo: string, userHasLiked: boolean, userHasDisliked: boolean): Reaction => {
+const addReaction = (reactionType: string, postId: string, username: string, uid: string, photo: string, userHasLiked: boolean, userHasDisliked: boolean): Reaction => {
   
   const reactionObj: Reaction = {
     uid: uid,

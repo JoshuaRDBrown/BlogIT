@@ -7,27 +7,33 @@ import Login from './components/Login';
 import HomePage from './components/HomePage';
 import UserProfile from './components/UserProfile';
 import PostPage from './components/PostPage';
-import createRandomId from './services/createRandomId';
 import PageNotFound from './components/PageNotFound';
 import Settings from './components/Settings';
-import getAndSetLocalStorage from './services/getAndSetLocalStorage';
 import createOrUpdatePost from './services/createOrUpdatePost';
 import UserInformation from './models/UserInformation';
 import { FireBaseUserObj } from './models/FireBaseUserObj';
+import { Posts } from './models/Posts';
+import SearchBox from './components/SearchBox';
+import PostCreationForm from './components/PostCreationForm';
+import { FormTypes } from './enums/FormTypes';
 interface IState {
 	userObj: FireBaseUserObj | null
 	isFirstLogin: boolean,
 	viewingAccountMenu: boolean,
 	defaultProfilePicture: string,
-	posts: any,
-	currentUserPosts: any,
+	postsToShow: Posts[],
+	allPosts: Posts[],
+	currentUserPosts: Posts[],
 	creatingNewPost: boolean,
 	isOnline: boolean,
 	isAdmin: boolean,
+	isSearching: boolean,
+	showPostCreationMessage: boolean
 }
 
 export const IsAdminContext = React.createContext(false);
 export default class App extends React.Component<{}, IState> {
+
 	constructor(props: any) {
 		super(props);
 		this.state = {
@@ -35,11 +41,14 @@ export default class App extends React.Component<{}, IState> {
 			isFirstLogin: false,
 			viewingAccountMenu: false,
 			defaultProfilePicture: 'https://racemph.com/wp-content/uploads/2016/09/profile-image-placeholder.png',
-			posts: [],
+			postsToShow: [],
+			allPosts: [],
 			currentUserPosts: [],
 			creatingNewPost: false,
 			isOnline: false,
-			isAdmin: false
+			isAdmin: false,
+			isSearching: false,
+			showPostCreationMessage: false
 		}
 	}
 
@@ -48,8 +57,17 @@ export default class App extends React.Component<{}, IState> {
 		this.setState({ isOnline: true });
 	}
 
-	componentWillUnmount() {
-		//window.removeEventListener('mouseup', this.componentDidMount);
+	private searchPosts(input: string):void {
+
+		if(input === "") {
+			this.setState({ postsToShow: this.state.allPosts, isSearching: false });
+		} else {
+			const searchResults = this.state.postsToShow.filter((post: Posts) => {
+				return post.content.title.includes(input)
+			});
+	
+			this.setState({ postsToShow: searchResults, isSearching: true });
+		}
 	}
 
 	private onAuth():void {
@@ -79,18 +97,14 @@ export default class App extends React.Component<{}, IState> {
 				console.log(err);
 			});
 		} else {
-			if(userInput.password === userInput.repeatedPassword) {
-				this.setState({ isFirstLogin: true });
-				fb.auth().createUserWithEmailAndPassword(userInput.email, userInput.password).then((user)=> {
-					fb.auth().currentUser?.updateProfile({
-						photoURL: this.state.defaultProfilePicture
-					})
-				}).catch((err)=> {
-					console.log(err);
+			this.setState({ isFirstLogin: true });
+			fb.auth().createUserWithEmailAndPassword(userInput.email, userInput.password).then((user)=> {
+				fb.auth().currentUser?.updateProfile({
+					photoURL: this.state.defaultProfilePicture
 				})
-			} else {
-				//return some error about matching passwords here
-			}
+			}).catch((err)=> {
+				console.log(err);
+			})
 		}
 	}
 
@@ -101,12 +115,11 @@ export default class App extends React.Component<{}, IState> {
 		const currentUserPosts = postData.filter((post) => {
 			return post.content.userId === this.state.userObj?.uid
 		})
-
-		this.setState({ posts: sortedPostData, currentUserPosts: currentUserPosts });
+		//@ts-ignore
+		this.setState({ postsToShow: sortedPostData, currentUserPosts: currentUserPosts, allPosts: sortedPostData});
 	}
 
 	private updateInitialInformation(userObj: UserInformation):void {
-		//TODO check if the username already exists
 		fb.auth().currentUser?.updateProfile({
 			displayName: userObj.displayName,
 			photoURL: userObj.photoURL || this.state.defaultProfilePicture,
@@ -125,19 +138,25 @@ export default class App extends React.Component<{}, IState> {
 
 	private logOut():void {
 		fb.auth().signOut().then(() => {
-			console.log('logged out')
+			this.context.router.push('/home');
 		}).catch((err) => {
 			console.log(err);
 		})
-
-		window.location.reload();
 	}
 
 	private createNewPost(title: string, body: string): void {
-		console.log(title, body)
 		let content = createOrUpdatePost("CREATE", title, body)
-		console.log(content)
-		this.state.posts.splice(0, 0, { content });
+		if(content){
+			this.state.postsToShow.splice(0, 0, { content });
+			this.setState({ creatingNewPost: false, showPostCreationMessage: true });
+
+			setTimeout(()=> {
+				this.setState({ showPostCreationMessage: false });
+			}, 1000);
+		}
+	}
+
+	private cancelPostCreation(): void {
 		this.setState({ creatingNewPost: false });
 	}
 
@@ -160,6 +179,7 @@ export default class App extends React.Component<{}, IState> {
 									<Link to='/home'>
 										<h1>BlogIT</h1>
 									</Link>
+									<SearchBox searchPosts={this.searchPosts.bind(this)} />
 									<div className='button-group'>
 										<button onClick={()=> this.setState({ creatingNewPost: true })} title='Create new post'>+</button>
 										<Link to='/home'>
@@ -172,11 +192,19 @@ export default class App extends React.Component<{}, IState> {
 										</button>
 									</div>
 								</div>
+								{this.state.creatingNewPost && 
+									<PostCreationForm 
+										formTitle="Create new post" 
+										formType={FormTypes.create} 
+										createNewPost={this.createNewPost.bind(this)} 
+										cancelPostCreation={this.cancelPostCreation.bind(this)} 
+								/>
+								}
 								{this.state.viewingAccountMenu &&
 									<div className='user-menu'>
 										<div className='user-box'>
 											<img alt='profile' src={fb.auth().currentUser?.photoURL!} />
-											<h2>{fb.auth().currentUser?.displayName}</h2>
+											<span>{fb.auth().currentUser?.displayName}</span>
 										</div>
 										<div className='user-menu_options'>
 											<Link to={`/user/${fb.auth().currentUser?.uid}`}>
@@ -201,24 +229,25 @@ export default class App extends React.Component<{}, IState> {
 								<Route exact path='/home'>
 									<HomePage
 										isFirstLogin={this.state.isFirstLogin}
-										creatingNewPost={this.state.creatingNewPost}
 										updateInitialInformation={this.updateInitialInformation.bind(this)}
-										posts={this.state.posts}
-										createNewPost={this.createNewPost.bind(this)}
+										posts={this.state.postsToShow}
 										genericProfilePicture={this.state.defaultProfilePicture}
+										isSearching={this.state.isSearching}
+										showPostCreationMessage={this.state.showPostCreationMessage}
 									/>
 								</Route>
 								<Route path='/settings'>
 									<Settings
 										userObj={this.state.userObj}
-									
 									/>
 								</Route>
 								<Route path='/user/:id' component={UserProfile} />
 								<Route path='/404'>
 									<PageNotFound />
 								</Route>
-								<Route path='/posts/:id' component={PostPage} />
+								<Route path='/posts/:id'>
+									<PostPage cancelPostCreation={this.cancelPostCreation.bind(this)} />
+								</Route>
 							</>
 						}
 					</Switch>

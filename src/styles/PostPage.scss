@@ -97,10 +97,15 @@
         color: $text-grey;
       }
 
+      img {
+        margin-bottom: 10px;
+      }
+
       .commentAuthor {
         display: flex;
         align-items: flex-start;
         min-width: 50%;
+        border-bottom: 1px solid $border-grey;
 
         #post-author-badge {
           font-size: 15px;

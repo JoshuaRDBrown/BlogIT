@@ -9,7 +9,6 @@ const PostFilters: React.SFC<Props> = (props) => {
   const filterOptions = [
     {id: 1, name: "newest", labelName: "Newest"},
     {id: 2, name: "popular", labelName: "Popular"},
-    {id: 3, name: "something", labelName: "Something"},
   ]
 
   const applyPostFilter = (event: any) => {
@@ -35,7 +34,6 @@ const PostFilters: React.SFC<Props> = (props) => {
       })}
     </div>
   )
-
 }
 
 export default PostFilters;

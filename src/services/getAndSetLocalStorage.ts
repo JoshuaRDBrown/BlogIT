@@ -7,6 +7,8 @@ const getAndSetLocalStorage = (action: string, localStorageItemKey: string, valu
       return JSON.parse(localStore);
     }
     return false 
+  } else if(action === "remove") {
+    window.localStorage.removeItem(localStorageItemKey);
   } else {
     if(typeof(value) == "object" && localStore) {
       const parsedStore = JSON.parse(localStore)

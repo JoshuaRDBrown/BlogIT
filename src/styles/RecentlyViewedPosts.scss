@@ -21,15 +21,15 @@
     margin-left: 20px;
     padding-bottom: 5px;
     width: 90%;
-    
-    #title {
+
+    p {
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
     }
-
+    
     .field {
       width: 100%;
       height: 40px;
@@ -43,11 +43,5 @@
       margin-top: 7px;
       margin-right: 5px;
     }
-
-
   }
-
-
-
-
 }

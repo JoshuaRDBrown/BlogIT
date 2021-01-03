@@ -35,7 +35,7 @@
     &_right-view {
       position: absolute;
       top: 0px;
-      left: 330px;
+      left: 300px;
       width: 500px;
       height: 100%;
       padding: 40px;
@@ -57,10 +57,24 @@
           margin-bottom: 20px;
         }
 
-        label {
+        label, span {
           color: #6b6b6b;
           font-weight: bold;
           margin-bottom: 10px;
+        }
+
+        span:nth-child(1) {
+          font-weight: bold;
+          font-size: 20px;
+        }
+
+        #operation-success {
+          color: $submit-button-green;
+        }
+
+        span {
+          font-weight: 100;
+          font-size: 15px;
         }
 
         input {
@@ -85,6 +99,7 @@
         background-color: $submit-button-green;
         color: white;
         font-size: 15px;
+        margin-top: 10px;
         cursor: pointer;
       }
     }
@@ -92,7 +107,7 @@
     &_menu {
       display: flex;
       flex-direction: column;
-      width: 300px;
+      width: 250px;
       height: 100%;
       border-right: 2px solid $grey;
 
@@ -107,8 +122,9 @@
         align-items: center;
 
         img {
-          width: 40px;
-          height: 40px;
+          width: 30px;
+          height: 30px;
+          margin-top: 35px;
         }
   
         button {
@@ -116,9 +132,8 @@
           width: 75%;
           margin-left: 10px;
           border: none;
-          font-size: 25px;
+          font-size: 20px;
           text-align: left;
-          margin-bottom: 30px;
           cursor: pointer;
         }
       }

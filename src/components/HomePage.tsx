@@ -13,21 +13,15 @@ interface IProps {
   isFirstLogin: boolean,
   updateInitialInformation: ((userObj: UserInformation) => void),
   posts: Posts[],
-  creatingNewPost: boolean,
-  createNewPost: ((title: string, body: string) => void),
   genericProfilePicture: string,
+  isSearching: boolean,
+  showPostCreationMessage: boolean,
 }
 
 const HomePage: React.SFC<IProps> = (props) => {
 
-  const [title, setPostTitle] = useState('');
-  const [body, setPostBody] = useState('');
-  const [closePostCreation, setClosePostCreation] = useState(false);
-  const [posts, setPosts] = useState<Posts[]>([])
-
-  const passCreateNewPost = (title: string, body: string) => {
-    props.createNewPost(title, body)
-  }
+  const [sortedPosts, setSortedPosts] = useState<Posts[]>([]);
+  const [isSorting, setIsSorting] = useState(false);
 
   let recentlyViewed = getAndSetLocalStorage('get', 'recentlyViewedPosts')
   if(recentlyViewed.length >= 3) {
@@ -40,7 +34,7 @@ const HomePage: React.SFC<IProps> = (props) => {
 
     let sortedPosts: Posts[] = []
 
-    console.log(filterBy)
+    setIsSorting(true)
 
     switch (filterBy) {
       case "popular": 
@@ -61,9 +55,7 @@ const HomePage: React.SFC<IProps> = (props) => {
         break;
     }
 
-    console.log(sortedPosts)
-
-    setPosts(sortedPosts)
+    setSortedPosts(sortedPosts)
   }
 
   document.title = 'Home'
@@ -73,25 +65,23 @@ const HomePage: React.SFC<IProps> = (props) => {
       {props.isFirstLogin &&
         <FirstLoginForm updateInitialInformation={props.updateInitialInformation} genericProfilePicture={props.genericProfilePicture} />
       }
-      {props.creatingNewPost &&
-        <PostCreationForm formTitle="Create new post" formType={FormTypes.create} createNewPost={passCreateNewPost} />
-      }
-
       <div className='left-container'>
         <RecentlyViewed posts={recentlyViewed} />
         <PostFilters filterPosts={filterPosts} />
       </div>
 
       <div className='content-container'>
-        {posts.length !== 0 ? 
-          <Post postData={posts} boxSize="50"/> : <Post postData={props.posts} boxSize="50"/>
-      
-      }
 
-
-        {/* {props.posts && props.posts.length !== 0 ?
-          <Post postData={props.posts} boxSize="50"/> : <p>There are currently no posts to show.</p>
-        } */}
+        {props.showPostCreationMessage &&
+          <div className="post-creation-confirmation">
+            <img src={process.env.PUBLIC_URL + '/assets/postConfirmationTick.svg'} />
+            <span>Post successfully created.</span>
+          </div>
+        }
+        
+        {props.posts.length !== 0 ? 
+          <Post postData={isSorting ? sortedPosts : props.posts} boxSize="50"/> : props.isSearching ? <h1 id="no-results">No results matched your search.</h1> : <h1>No posts</h1>
+        }
       </div>
     </div>
   )
