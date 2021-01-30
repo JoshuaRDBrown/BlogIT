@@ -32,9 +32,10 @@ const Settings: React.SFC<Props> = (props) => {
           {settings_menu.map((setting) => {
             const isCurrentlyViewing = setting.name === currentSettingView;
             return(
-              <div className='settings-box_menu--item'>
+              <div className='settings-box_menu--item' key={setting.name}>
                 <img 
                   src={process.env.PUBLIC_URL + `/assets/icon-${setting.name}.svg`}
+                  alt={setting.name}
                 />
                 <button 
                   key={setting.name} 

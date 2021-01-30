@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { FormTypes } from '../enums/FormTypes';
-
 interface SubmitObj {
 	email: string,
 	password: string,
@@ -17,7 +15,7 @@ const Login: React.SFC<IProps> = (props) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [repeatPassword, setRepeatedPassword] = useState('');
-	const [formError, setFormError] = useState("");
+	//const [formError, setFormError] = useState("");
 
 	const userInput: SubmitObj = {
 		email: email,
@@ -25,18 +23,21 @@ const Login: React.SFC<IProps> = (props) => {
 		repeatedPassword: repeatPassword,
 	}
 
-	const validateInput = () => {
-		if(email === "" || password === "") {
-			console.log("true1")
-			setFormError("Please enter an email address and password.")
-		} else if (formType === "SIGN_UP") {
-			if(password !== repeatPassword) {
-				setFormError("Please ensure your passwords match.")
-			}
-		} else {
-			props.authUser(formType, userInput)
-		}
-	}
+	// const validateInput = () => {
+	// 	console.log("HELLO")
+	// 	if(email === "" || password === "") {
+	// 		console.log("i run")
+	// 		setFormError("Please enter an email address and password.")
+	// 	} else if (formType === "SIGN_UP") {
+	// 		if(password !== repeatPassword) {
+	// 			console.log("i run")
+	// 			setFormError("Please ensure your passwords match.")
+	// 		}
+	// 	} else {
+	// 		console.log(userInput)
+	// 		props.authUser(formType, userInput)
+	// 	}
+	// }
 
   return(
   	<div className='login-container'>
@@ -59,11 +60,12 @@ const Login: React.SFC<IProps> = (props) => {
 						</>
 					}
 
-					{formError !== "" &&
+					{/* {formError !== "" &&
 						<p id="form-error">{formError}</p>
-					}
+					} */}
 
-					<button onClick={validateInput}>Login</button>
+					<button onClick={()=> props.authUser(formType, userInput)}>{formType === "LOGIN" ? "Login" : "Sign up"}</button>
+
 						{formType === "LOGIN" ?
 							<p id='create-account' onClick={()=> setFormType("SIGN_UP")}>
 								Don't have an account? Click here to create one.

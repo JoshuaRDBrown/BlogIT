@@ -51,7 +51,7 @@ const PostPage: React.SFC<Props> = (props) => {
 
   const isAdmin = useContext(IsAdminContext);
   const location = useLocation()
-  const postId = location.pathname.slice(7, 13);
+  const postId = location.pathname.slice(7);
 
   useEffect(():any => {
     isMounted.current = true;
@@ -136,8 +136,8 @@ const PostPage: React.SFC<Props> = (props) => {
     setPostData({...postData, content: {
         id: postData.content.id,
         userId: postData.content.userId, 
-        title: postHeader == "" ? postData.content.title : postHeader, 
-        body: postBody == "" ? postData.content.body : postBody,  
+        title: postHeader === "" ? postData.content.title : postHeader, 
+        body: postBody === "" ? postData.content.body : postBody,  
         author: postData.content.author, 
         photoURL: postData.content.photoURL, 
         time: postData.content.time, 
@@ -175,16 +175,16 @@ const PostPage: React.SFC<Props> = (props) => {
             <span id='title'>{postData.content.title}</span>
             {(postData.content.userId === fb.auth().currentUser?.uid || isAdmin) &&
               <button id="post-author-actions" onClick={()=> setHasClickedPostActions((prevState)=> !prevState)}>
-                <img src={process.env.PUBLIC_URL + '/assets/3dots.svg'}/>
+                <img alt="3dots" src={process.env.PUBLIC_URL + '/assets/3dots.svg'}/>
                 {hasClickedPostActions &&
                   <div className='post-actions-menu'>
                     <button onClick={()=> setIsEditingPost(true)}>
-                      <img src={process.env.PUBLIC_URL + '/assets/edit.svg'}/>
+                      <img alt="edit" src={process.env.PUBLIC_URL + '/assets/edit.svg'}/>
                       <span>Edit</span>
                     </button>
                     <Link to="/home" style={{all: "unset"}}>
                       <button id='delete' onClick={()=> removePost(postId)}>
-                        <img src={process.env.PUBLIC_URL + '/assets/delete.svg'}/>
+                        <img  alt="delete" src={process.env.PUBLIC_URL + '/assets/delete.svg'}/>
                         <span>Delete</span>
                       </button>
                     </Link>
@@ -211,15 +211,17 @@ const PostPage: React.SFC<Props> = (props) => {
               onClick={()=> onReactionClick("likes")} 
               src={process.env.PUBLIC_URL + '/assets/like.svg'} 
               className={userHasLiked ? 'liked' : ''}
+              alt="like"
             />
             <span>{likesAmount}</span>
             <img 
               onClick={()=> onReactionClick("dislikes")} 
               src={process.env.PUBLIC_URL + '/assets/like.svg'}
               className={userHasDisliked ? 'disliked' : ''} 
+              alt="dislike"
             />
             <span>{dislikesAmount}</span>
-            <img src={process.env.PUBLIC_URL + '/assets/comments.svg'} />
+            <img  alt="comments" src={process.env.PUBLIC_URL + '/assets/comments.svg'} />
             <span>{existingComments.length || '0'}</span>
           </div>
         </div>
@@ -233,7 +235,7 @@ const PostPage: React.SFC<Props> = (props) => {
         {existingComments.length !== 0 &&
           existingComments.map((comment: Comment, i:number) => {
             return(
-              <PostCommentSection comment={comment} index={i} />
+              <PostCommentSection key={i} comment={comment} index={i} />
             )
           })
         }

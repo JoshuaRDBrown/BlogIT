@@ -1,7 +1,5 @@
 import createRandomId from './createRandomId';
 import fb from '../config/fireBase';
-import { Posts } from '../models/Posts';
-
 interface postContent {
   id: string,
   title: string,
@@ -16,7 +14,7 @@ interface postContent {
 
 const createOrUpdatePost = (action: string, postHeader: string, postBody: string, postId?: string, data?: any): postContent | undefined  => {
 
-  if(postHeader != "" || postBody != "") {
+  if(postHeader !== "" || postBody !== "") {
 
     const time = Math.floor(Date.now() / 1000);
     
@@ -45,8 +43,8 @@ const createOrUpdatePost = (action: string, postHeader: string, postBody: string
 
       const content = Object.freeze({
         id: postId,
-        title: postHeader == "" ? data?.title : postHeader,
-        body: postBody == "" ? data?.body : postBody,
+        title: postHeader === "" ? data?.title : postHeader,
+        body: postBody === "" ? data?.body : postBody,
         time: data?.time,
         timeUpdated: time,
         author: data?.author,

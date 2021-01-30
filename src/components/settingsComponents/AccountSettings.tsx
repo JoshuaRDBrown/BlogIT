@@ -36,7 +36,7 @@ const AccountSettings: React.SFC<Props> = (props) => {
   const [canChangeUserName, setChangeUserName] = useState(false);
   const [formHasError, setFormHasError] = useState(false);
 
-  const { displayName, email, phoneNumber, oldPassword, newPassword } = updatedSettings;
+  const { displayName, email, oldPassword, newPassword } = updatedSettings;
 
   const updateAccountInfo = ():void => {
     const user = fb.auth().currentUser;
@@ -85,7 +85,7 @@ const AccountSettings: React.SFC<Props> = (props) => {
         {accountInfo.map((field) => {
           return(
             <React.Fragment key={field.name}>
-              <label htmlFor='userInfoInput'>
+              <label htmlFor={field.name}>
                 {field.label.toUpperCase()}
               </label>
               <input 
@@ -98,7 +98,7 @@ const AccountSettings: React.SFC<Props> = (props) => {
                   ...prevState,
                   [field.name]: e.target.value
                 }))}}
-                id='userInfoInput' 
+                id={field.name}
                 placeholder={field.name === 'oldPassword' ? 'Old Password' : field.name.includes('Password') ? 'New Password' : ''} 
                 defaultValue={field.value === '' ? null : field.value}
               />

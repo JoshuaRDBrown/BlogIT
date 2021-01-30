@@ -1,4 +1,3 @@
-import { Console } from 'console';
 import React, { useState } from 'react';
 import UserInformation from '../models/UserInformation';
 interface IProps {

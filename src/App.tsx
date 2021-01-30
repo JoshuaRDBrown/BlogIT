@@ -138,7 +138,7 @@ export default class App extends React.Component<{}, IState> {
 
 	private logOut():void {
 		fb.auth().signOut().then(() => {
-			this.context.router.push('/home');
+			this.setState({ userObj: null });
 		}).catch((err) => {
 			console.log(err);
 		})

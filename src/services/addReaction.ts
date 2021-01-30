@@ -23,6 +23,8 @@ const addReaction = (reactionType: string, postId: string, username: string, uid
           if(reaction.uid === fb.auth().currentUser?.uid) {
         	  return false;
           }
+
+          return true;
         })
 
 			  ref.update({

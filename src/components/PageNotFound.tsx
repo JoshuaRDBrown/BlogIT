@@ -8,7 +8,7 @@ const PageNotFound: React.SFC = () => {
   return(
     <div className="pnf-container">
       <div className="error-message">
-        <img src={process.env.PUBLIC_URL + '/assets/404.svg'}/>
+        <img alt="404" src={process.env.PUBLIC_URL + '/assets/404.svg'}/>
         <h1>404 - Page not found.</h1>
         <h2>Unfortunately, the page you were looking for does not exist.</h2>
         <p>Why does this happen?</p>

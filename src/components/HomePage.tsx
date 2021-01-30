@@ -4,8 +4,6 @@ import { Posts } from '../models/Posts';
 import getAndSetLocalStorage from '../services/getAndSetLocalStorage';
 import RecentlyViewed from './RecentlyViewed';
 import Post from './Post';
-import PostCreationForm from './PostCreationForm';
-import { FormTypes } from '../enums/FormTypes';
 import UserInformation from '../models/UserInformation';
 import PostFilters from './PostFilters';
 
@@ -74,7 +72,7 @@ const HomePage: React.SFC<IProps> = (props) => {
 
         {props.showPostCreationMessage &&
           <div className="post-creation-confirmation">
-            <img src={process.env.PUBLIC_URL + '/assets/postConfirmationTick.svg'} />
+            <img alt="post created" src={process.env.PUBLIC_URL + '/assets/postConfirmationTick.svg'} />
             <span>Post successfully created.</span>
           </div>
         }
